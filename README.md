@@ -97,3 +97,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ---
 
 For more details, contact us at [team@oncodetect.com](mailto:team@oncodetect.com).
+
+EER - Commit. DD14519984
