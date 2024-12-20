@@ -24,3 +24,15 @@ def preprocess_image(image_path):
     img_resized = cv2.resize(img, (224, 224))
     img_normalized = img_resized / 255.0
     return np.expand_dims(img_normalized, axis=0)
+
+
+# Function to predict the uploaded image
+def predict_image(image_path):
+    """Predicts whether the image is positive or negative for breast cancer."""
+    preprocessed_image = preprocess_image(image_path)
+    prediction = model.predict(preprocessed_image)
+    probability = prediction[0][0]
+    if probability > 0.5:
+        return f"Positive for breast cancer (confidence: {probability:.2f})"
+    else:
+        return f"Negative for breast cancer (confidence: {1 - probability:.2f})"
