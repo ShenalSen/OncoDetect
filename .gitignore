@@ -6,3 +6,6 @@
 *.bmp
 *.tiff
 *.svg
+
+# Ignore csv files
+*.csv
