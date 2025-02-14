@@ -128,7 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React Frontend URL
+    "http://localhost:5174",  # React Frontend URL
 ]
 
 CORS_ALLOW_CREDENTIALS = True  # Allow credentials (optional)
@@ -138,3 +138,6 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
