@@ -72,7 +72,7 @@ def register():
     password=data.get('password')
 
     if User.query.filter_by(email=email).first():
-        return jsonify({'massage:User already exists'}),400
+        return jsonify({'message': 'User already exists'}), 400
     
 
     hashed_password=bcrypt.generate_password_hash(password).decode('utf-8')
