@@ -22,13 +22,22 @@ login_manager=LoginManager(app)
 
 
 #User model
-
 class User(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True)
     username=db.Column(db.String(100),unique=True,nullable=False)
     password=db.Column(db.String(256),nullable=True)
     email=db.Column(db.String(120),unique=True,nullable=False)
     google_id = db.Column(db.String(256), unique=True, nullable=True)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+#database table
+with app.app_context():
+    db.create_all()
 
 
 
