@@ -16,9 +16,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'supersecretkey'
 
 db=SQLAlchemy(app)
-Bcrypt=Bcrypt(app)
+bcrypt=Bcrypt(app)
 jwt=JWTManager(app)
 login_manager=LoginManager(app)
+
+#Google oAuth
+GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID"
+GOOGLE_CLIENT_SECRET = "YOUR_GOOGLE_CLIENT_SECRET"
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
+REDIRECT_URI = "http://127.0.0.1:5000/google/callback"
 
 
 #User model
@@ -41,19 +47,21 @@ with app.app_context():
 
 
 
+# User Login
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
-@app.route('/login',methods=['POST'])
-def Login():
-    data=request.get_json()
+    user = User.query.filter_by(email=email).first()
 
-    Username=data.get('Username')
-    Password=data.get('Password')
-
-
-    if Username== 'User' and Password=='User123':
-        return jsonify({'message':'Login successful'}),200
+    if user and bcrypt.check_password_hash(user.password, password):
+        access_token = create_access_token(identity=user.id)
+        return jsonify({'message': 'Login successful', 'token': access_token}), 200
     else:
-        return jsonify({'message':'Login failed'}),401
+        return jsonify({'message': 'Invalid credentials'}), 401
+    
     
 if  __name__=="__main__":
      app.run(debug=True, host='0.0.0.0', port=5000)   
