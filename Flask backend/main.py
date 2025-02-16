@@ -62,6 +62,26 @@ def login():
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
     
+
+#User registration
+@app.route('/register',methods=['POST'])
+def register():
+    data=request.get_json()
+    email=data.get('email')
+    username=data.get('username')
+    password=data.get('password')
+
+    if User.query.filter_by(email=email).first():
+        return jsonify({'massage:User already exists'}),400
+    
+
+    hashed_password=bcrypt.generate_password_hash(password).decode('utf-8')
+    new_user=User(email=email,username=username,password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'message': 'User registered successfully'}),201
+    
     
 if  __name__=="__main__":
      app.run(debug=True, host='0.0.0.0', port=5000)   
