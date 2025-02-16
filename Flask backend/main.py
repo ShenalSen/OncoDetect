@@ -64,24 +64,30 @@ def login():
     
 
 #User registration
-@app.route('/register',methods=['POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    data=request.get_json()
-    email=data.get('email')
-    username=data.get('username')
-    password=data.get('password')
+    data = request.get_json()
+    email = data.get('email')
+    username = data.get('username')
+    password = data.get('password')
+
+    print(f"Received data: {data}")  # Print received data
 
     if User.query.filter_by(email=email).first():
+        print("User already exists")
         return jsonify({'message': 'User already exists'}), 400
-    
 
-    hashed_password=bcrypt.generate_password_hash(password).decode('utf-8')
-    new_user=User(email=email,username=username,password=hashed_password)
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    new_user = User(email=email, username=username, password=hashed_password)
+
+    print(f"Creating user: {email}, {username}")  # Print user creation info
+
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'message': 'User registered successfully'}),201
+    print("User added to the database")
     
+    return jsonify({'message': 'User registered successfully'}), 201
     
 if  __name__=="__main__":
      app.run(debug=True, host='0.0.0.0', port=5000)   
