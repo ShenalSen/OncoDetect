@@ -25,5 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include("patients.urls")),
     path('', home_view), 
+    
 
 ]
