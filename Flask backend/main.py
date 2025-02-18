@@ -47,6 +47,9 @@ class Patient(db.Model):
     appointment_id = db.Column(db.String(100), nullable=False)
     scan_file = db.Column(db.String(256), nullable=True)
 
+with app.app_context():
+    db.create_all()
+
 
 #file upload setup
 app.config['UPLOAD_FOLDER'] = 'upload_files'
