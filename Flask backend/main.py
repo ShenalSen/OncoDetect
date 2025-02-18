@@ -48,6 +48,14 @@ class Patient(db.Model):
     scan_file = db.Column(db.String(256), nullable=True)
 
 
+#file upload setup
+app.config['UPLOAD_FOLDER'] = 'upload_files'
+app.config['ALLOWED_EXTENSIONS']={'png','jpg','jpeg','dcm','tif'}
+
+def allowed_file(filename):
+     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -100,6 +108,50 @@ def register():
     print("User added to the database")
     
     return jsonify({'message': 'User registered successfully'}), 201
+
+#add pateint details
+@app.route('/patient', methods=['POST'])
+def add_patient():
+    data=request.form
+    patient_id=data.get('patient_id')
+    name=data.get('name')
+    age=data.get('age')
+    contact_number=data.get('contact_number')
+    appointment_id=data.get('appointment_id')
+
+
+    #handle file upload
+    if 'scan_file' not in request.files:
+        return jsonify({'message': 'No file part in the request'}),400
+    file=request.files['scan_file']
+
+    if file.filename == '':
+        return jsonify({'message':'No file selected'}),400
+    
+    if file and allowed_file(file.filename):
+        filename=secure_filename(file.filename)
+        file_path=os.path.join(app.config['UPLOAD_FOLDER'],filename)
+        file.save(file_path)
+
+
+        #create a new patient
+        new_patient=Patient(
+            patient_id=patient_id,
+            name=name,
+            age=age,
+            contact_number=contact_number,
+            appointment_id=appointment_id,
+            scan_file=file_path
+        )
+        db.session.add(new_patient)
+        db.session.commit()
+
+        return jsonify({'message':'Patient added successfully'}),201
+    
+    else:
+        return jsonify({'message':'Invalid file type'}),400
+    
+
     
 if  __name__=="__main__":
      app.run(debug=True, host='0.0.0.0', port=5000)   
