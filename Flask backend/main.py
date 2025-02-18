@@ -151,6 +151,26 @@ def add_patient():
     else:
         return jsonify({'message':'Invalid file type'}),400
     
+#get patient details by ID
+@app.route('/patient/<int:id>', methods=['GET'])
+def get_patient(id):
+    patient=Patient.query.get(id)
+    if patient:
+         return jsonify({
+            'patient_id': patient.patient_id,
+            'name': patient.name,
+            'age': patient.age,
+            'contact_number': patient.contact_number,
+            'appointment_id': patient.appointment_id,
+            'scan_file': patient.scan_file
+        }), 200
+    else:
+         return jsonify({'message': 'Patient not found'}), 404
+
+
+
+
+    
 
     
 if  __name__=="__main__":
