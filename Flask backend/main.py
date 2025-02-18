@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 from requests_oauthlib import OAuth2Session
 import os
+from werkzeug.utils import secure_filename
 
 app=Flask(__name__)
 app.secret_key=os.urandom(24)
@@ -34,6 +35,17 @@ class User(db.Model,UserMixin):
     password=db.Column(db.String(256),nullable=True)
     email=db.Column(db.String(120),unique=True,nullable=False)
     google_id = db.Column(db.String(256), unique=True, nullable=True)
+
+
+#Patient model
+class Patient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+    contact_number = db.Column(db.String(20), nullable=False)
+    appointment_id = db.Column(db.String(100), nullable=False)
+    scan_file = db.Column(db.String(256), nullable=True)
 
 
 @login_manager.user_loader
