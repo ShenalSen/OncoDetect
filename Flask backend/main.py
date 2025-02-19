@@ -136,7 +136,7 @@ def add_patient():
 # Get patient details by ID
 @app.route('/patient/<int:id>', methods=['GET'])
 def get_patient(id):
-    patient = Patient.query.get(id)
+    patient = Patient.query.filter_by(patient_id=id).first() 
     if patient:
         return jsonify({
             'patient_id': patient.patient_id,
