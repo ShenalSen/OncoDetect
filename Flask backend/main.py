@@ -148,6 +148,22 @@ def get_patient(id):
         }), 200
     else:
         return jsonify({'message': 'Patient not found'}), 404
+    
+#update patient details
+@app.route('/patient/<int:id>',methods=['PUT'])
+def update_patient(id):
+    patient=Patient.query.get(id)
+    if not patient:
+        return jsonify({'message':'Patient not found'}),404
+    
+    data=request.get_json()
+    patient.name=data.get('name',patient.name)
+    patient.date_in=data.get('date_in',patient.date_in)
+    patient.final_result=data.get('final_result',patient.final_result)
+    patient.prediction_status=data.get('prediction_status',patient.prediction_status)
+
+    db.session.commit()
+    return jsonify({'message': 'Patient updated successfully'}), 200
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
