@@ -188,5 +188,16 @@ def update_patient(id):
     db.session.commit()
     return jsonify({'message': 'Patient updated successfully'}), 200
 
+@app.route('/patient/<int:id>',methods=['DELETE'])
+def delete_patient(id):
+    patient=Patient.query.get(id)
+    if not patient:
+        return jsonify({'massage': 'Patient not found'}),404
+    
+    db.session.delete(patient)
+    db.session.flush()
+    db.session.commit()
+    return jsonify({'message': 'Patient deleted successfully'}),200
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
