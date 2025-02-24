@@ -89,6 +89,11 @@ def login():
         return jsonify({'message': 'Login successful', 'token': access_token}), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
+    
+# Root route to check if the backend is working
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({'message': 'Welcome to Oncodetect backend!'}), 200
 
 # User Registration
 @app.route('/register', methods=['POST'])
