@@ -1,15 +1,17 @@
-
-
-import './App.css'
+import React from 'react';
+import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
+import './App.css';
+import LSideBar from './Components/L-SideBar'; // Ensure correct path
 
 function App() {
-  
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-   
-  )
+    <BrowserRouter> {/* Wrap everything in BrowserRouter */}
+      <div className="flex">
+        <LSideBar /> {/* Corrected component name */}
+       
+      </div>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
