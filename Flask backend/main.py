@@ -99,11 +99,20 @@ def register():
 @app.route('/patient', methods=['POST'])
 def add_patient():
     data = request.form
+    print("Form Data:", data)
     patient_id = data.get('patient_id')
     name = data.get('name')
     age = data.get('age')
     contact_number = data.get('contact_number')
     appointment_id = data.get('appointment_id')
+
+
+    # Log the form data
+    print(f"Patient ID: {patient_id}")
+    print(f"Name: {name}")
+    print(f"Age: {age}")
+    print(f"Contact Number: {contact_number}")
+    print(f"Appointment ID: {appointment_id}")
 
     if 'scan_file' not in request.files:
         return jsonify({'message': 'No file part in the request'}), 400
@@ -134,8 +143,9 @@ def add_patient():
         return jsonify({'message': 'Invalid file type'}), 400
 
 # Get patient details by ID
-@app.route('/patient/<int:id>', methods=['GET'])
+@app.route('/patient/<string:id>', methods=['GET'])
 def get_patient(id):
+    # Strip leading and trailing whitespaces
     patient = Patient.query.filter_by(patient_id=id).first() 
     if patient:
         return jsonify({
@@ -149,18 +159,18 @@ def get_patient(id):
     else:
         return jsonify({'message': 'Patient not found'}), 404
     
-#update patient details
-@app.route('/patient/<int:id>',methods=['PUT'])
+# Update patient details
+@app.route('/patient/<int:id>', methods=['PUT'])
 def update_patient(id):
-    patient=Patient.query.get(id)
+    patient = Patient.query.get(id)
     if not patient:
         return jsonify({'message':'Patient not found'}),404
     
-    data=request.get_json()
-    patient.name=data.get('name',patient.name)
-    patient.date_in=data.get('date_in',patient.date_in)
-    patient.final_result=data.get('final_result',patient.final_result)
-    patient.prediction_status=data.get('prediction_status',patient.prediction_status)
+    data = request.get_json()
+    patient.name = data.get('name', patient.name)
+    patient.age = data.get('age', patient.age)
+    patient.contact_number = data.get('contact_number', patient.contact_number)
+    patient.appointment_id = data.get('appointment_id', patient.appointment_id)
 
     db.session.commit()
     return jsonify({'message': 'Patient updated successfully'}), 200
