@@ -2,7 +2,7 @@ import React from "react";
 import img1 from "../assets/doc.jpg";
 
 import img6 from "../assets/file.png"; 
-import Header from "../components/headerMain";
+//import Header from "../components/headerMain";
 
 
 
