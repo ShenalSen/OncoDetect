@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 import LSideBar from './Components/L-SideBar';
 import Doctor from './Pages/Doctor';
+import PredictionTable from './Pages/PredictionTable';
 
 function App() {
   return (
@@ -11,6 +12,8 @@ function App() {
         <LSideBar />
         <Routes>
           <Route path="/doctor" element={<Doctor />} />
+          <Route path="/past-predictions" element={<PredictionTable />} />
+
           
           
         </Routes>
