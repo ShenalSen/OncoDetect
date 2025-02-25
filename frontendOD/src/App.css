@@ -1,3 +1,405 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    background-color: #ba9dec;
+    color: white;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.nav-links a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: #7e57c2;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+
+
+.topic-header {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #69265d; /* Vibrant blue color */
+    margin-bottom: 20px;
+}
+
+.topic-header span {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #eae2ea; 
+    border-radius: 5px;
+    
+}
+
+
+
+
+
+
+.diagnostic-results {
+    background-color: #f5f4f5;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+
+.mammogram {
+    flex: 1;
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mammogram h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.mammogram-image {
+    width: 90%; /* Resize the image */
+    max-width: 300px; /* Limit the maximum size */
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.mammogram p {
+    font-size: 14px;
+    color: #430237;
+    margin: 5px 0;
+}
+
+.results-summary {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  .results-summary h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center; /* Center align the heading */
+  }
+  
+  .results-summary ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .results-summary ul li {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .results-summary ul li strong {
+    color: #000;
+  }
+  
+  .results-summary .highlight {
+    color: #4caf50;
+    font-weight: bold;
+  }
+  
+  .results-summary .malignant {
+    color: #ff6347;
+    font-weight: bold;
+  }
+  
+  .results-summary .highlight-link {
+    color: #3f51b5;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .results-summary ul ul {
+    margin-top: 10px;
+    padding-left: 20px;
+  }
+  
+  .results-summary ul ul li {
+    list-style-type: disc;
+    color: #555;
+  }
+  
+
+
+
+
+.statistics {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.statistical-visualization {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    max-width: 400px;
+  }
+  
+  .statistical-visualization h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .stat-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stat-circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background: conic-gradient(
+      #ff6347 0% 87%,
+      #ffa500 87% 100%,
+      #32cd32 100%
+    );
+    border-radius: 50%;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .circle-percentage {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff6347;
+  }
+  
+  .legend {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  
+  .normals {
+    background-color: #32cd32;
+  }
+  
+  .abnormalities {
+    background-color: #ff6347;
+  }
+  
+  .ambiguities {
+    background-color: #ffa500;
+  }
+  
+
+
+
+.patient-info-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    text-align: left;
+}
+
+.patient-info-container h2 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 15px;
+}
+
+.patient-details p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555555;
+}
+
+.patient-details .highlight {
+    color: #3f51b5;
+    font-weight: bold;
+}
+
+.view-predictions-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background-color: #9362d8;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none; /* Removes focus outline */
+    box-shadow: none; /* Ensures no shadow appears */
+    transition: background-color 0.3s;
+}
+
+.view-predictions-btn:hover {
+    background-color: #3700b3;
+}
+
+
+
+.additional-insights {
+    background-color: #ffffff; /* Match the background with Actions section */
+    padding: 20px; /* Same padding as Actions */
+    border-radius: 8px; /* Rounded corners for uniformity */
+    margin-top: 20px;
+    font-size: 16px; /* Keep the font size readable */
+    color: #333; /* Use a standard text color */
+    text-align: left; /* Align text properly */
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.additional-insights h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000; /* Make the header text bold and prominent */
+}
+
+.additional-insights p {
+    line-height: 1.5;
+    margin: 0;
+    color: #333; /* Consistent text color */
+}
+
+.additional-insights p strong {
+    color: #ff0000; /* Highlight strong text in red */
+}
+
+.additional-insights p span {
+    color: #6c63ff; /* Use a soft purple for extra details */
+}
+
+
+
+.actions {
+    text-align: left;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.actions h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.actions p {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.actions p a {
+    text-decoration: none;
+    color: #4CAF50;
+    
+}
+
+.button-pdf {
+    background-color: #FFA500;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.button-pdf:hover {
+    background-color: #cc8400;
+}
+
+.button-confirm {
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.button-confirm:hover {
+    background-color: #cc4f39;
+}
+
+
+
+
+
+
