@@ -1,14 +1,19 @@
 import React from 'react';
-import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-import LSideBar from './Components/L-SideBar'; // Ensure correct path
+import LSideBar from './Components/L-SideBar';
+import Doctor from './Pages/Doctor';
 
 function App() {
   return (
-    <BrowserRouter> {/* Wrap everything in BrowserRouter */}
+    <BrowserRouter>
       <div className="flex">
-        <LSideBar /> {/* Corrected component name */}
-       
+        <LSideBar />
+        <Routes>
+          <Route path="/doctor" element={<Doctor />} />
+          
+          
+        </Routes>
       </div>
     </BrowserRouter>
   );
