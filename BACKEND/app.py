@@ -186,7 +186,10 @@ def update_patient(id):
 #patient data
 @app.route('/patients', methods=['GET'])
 def get_all_patients():
-
+    """
+    Returns a list of all patients with their details.
+    Useful for displaying a patient table on the dashboard.
+    """
     patients = Patient.query.all()
     patient_list = [
         {
@@ -200,6 +203,7 @@ def get_all_patients():
         }
         for p in patients
     ]
+    return jsonify(patient_list), 200
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
