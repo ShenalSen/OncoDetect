@@ -154,7 +154,7 @@ def add_patient():
     else:
         return jsonify({'message': 'Invalid file type'}), 400
 
-# Get patient details by ID
+# Get patient details by patient_id
 @app.route('/patient/<int:id>', methods=['GET'])
 def get_patient(id):
     patient = Patient.query.filter_by(patient_id=id).first() 
@@ -179,15 +179,27 @@ def update_patient(id):
     
     data = request.get_json()
     patient.name = data.get('name', patient.name)
-    # The following fields (date_in, final_result, prediction_status) are not defined in the Patient model.
-    # Uncomment or update these if they are added to the model.
-    # patient.date_in = data.get('date_in', patient.date_in)
-    # patient.final_result = data.get('final_result', patient.final_result)
-    # patient.prediction_status = data.get('prediction_status', patient.prediction_status)
-
+    # Additional fields can be updated here if they exist in the model.
     db.session.commit()
     return jsonify({'message': 'Patient updated successfully'}), 200
 
+#patient data
+@app.route('/patients', methods=['GET'])
+def get_all_patients():
+
+    patients = Patient.query.all()
+    patient_list = [
+        {
+            'id': p.id,
+            'patient_id': p.patient_id,
+            'name': p.name,
+            'age': p.age,
+            'contact_number': p.contact_number,
+            'appointment_id': p.appointment_id,
+            'scan_file': p.scan_file
+        }
+        for p in patients
+    ]
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
-
