@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 const Nav = () => {
   const location = useLocation();
   return (
+    
     <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-lg flex flex-col">
       {/* Logo Section */}
       <div className="flex items-center justify-center p-6">
