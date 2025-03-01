@@ -259,5 +259,16 @@ def create_appointment():
 
     return jsonify({'message': 'Appointment created successfully'}), 201
 
+# Get all appointments
+@app.route('/appointments', methods=['GET'])
+def get_appointments():
+    appointments = Appointment.query.all()
+    return jsonify([{
+        'patient_id': appointment.patient_id,
+        'doctor_id': appointment.doctor_id,
+        'appointment_date': appointment.appointment_date,
+        'description': appointment.description
+    } for appointment in appointments]), 200
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
