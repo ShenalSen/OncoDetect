@@ -46,7 +46,7 @@ def check_if_token_revoked(jwt_header, jwt_payload):
     jti = jwt_payload["jti"]
     return jti in blacklist
 
-# Models
+#Models
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
@@ -62,6 +62,27 @@ class Patient(db.Model):
     contact_number = db.Column(db.String(20), nullable=False)
     appointment_id = db.Column(db.String(100), nullable=False)
     scan_file = db.Column(db.String(256), nullable=True)
+
+class Appointment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.String(100), nullable=False)
+    doctor_id = db.Column(db.String(100), nullable=False)
+    appointment_date = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.String(500), nullable=True)
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    message = db.Column(db.String(500), nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+
+class DoctorProof(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.String(100), nullable=False)
+    proof_file = db.Column(db.String(256), nullable=False)
+    upload_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
 
 with app.app_context():
     db.create_all()
@@ -202,12 +223,6 @@ def update_patient(id):
     
     data = request.get_json()
     patient.name = data.get('name', patient.name)
-    # The following fields (date_in, final_result, prediction_status) are not defined in the Patient model.
-    # Uncomment or update these if they are added to the model.
-    # patient.date_in = data.get('date_in', patient.date_in)
-    # patient.final_result = data.get('final_result', patient.final_result)
-    # patient.prediction_status = data.get('prediction_status', patient.prediction_status)
-
     db.session.commit()
     return jsonify({'message': 'Patient updated successfully'}), 200
 
@@ -222,6 +237,27 @@ def delete_patient(id):
     db.session.commit()
     print("Patient deleted and changes committed to the database.")
     return jsonify({'message': 'Patient deleted successfully'}),200
+
+# Create a new appointment
+@app.route('/appointment', methods=['POST'])
+def create_appointment():
+    data=request.get_json()
+    patient_id=data.get('patient_id')
+    doctor_id = data.get('doctor_id')
+    appointment_date = data.get('appointment_date')
+    description = data.get('description')
+
+    new_appointment = Appointment(
+        patient_id=patient_id,
+        doctor_id=doctor_id,
+        appointment_date=appointment_date,
+        description=description
+    )
+
+    db.session.add(new_appointment)
+    db.session.commit()
+
+    return jsonify({'message': 'Appointment created successfully'}), 201
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
