@@ -283,5 +283,22 @@ def get_appointment(id):
         'description': appointment.description
     }), 200
 
+# Create a notification
+@app.route('/notification',methods=['POST'])
+def create_notification():
+    data=request.get_json()
+    user_id=data.get('user_id')
+    message=data.get('message')
+
+    new_notification=Notification(
+        user_id=user_id,
+        message=message
+    )
+
+    db.session.add(new_notification)
+    db.session.commit()
+
+    return jsonify({'message': 'Notification created successfully'}), 201
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
