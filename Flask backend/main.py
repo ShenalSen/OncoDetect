@@ -62,6 +62,9 @@ class Patient(db.Model):
     contact_number = db.Column(db.String(20), nullable=False)
     appointment_id = db.Column(db.String(100), nullable=False)
     scan_file = db.Column(db.String(256), nullable=True)
+    final_result=db.Column(db.String)
+    prrediction_status=db.Column(db.String(50), nullable=False)
+    date_in = db.Column(db.String(50), nullable=False)
 
 with app.app_context():
     db.create_all()
@@ -130,6 +133,9 @@ def add_patient():
     age = data.get('age')
     contact_number = data.get('contact_number')
     appointment_id = data.get('appointment_id')
+    final_result = data.get('final_result')
+    prediction_status = data.get('prediction_status')
+    date_in = data.get('date_in')
 
     if 'scan_file' not in request.files:
         return jsonify({'message': 'No file part in the request'}), 400
@@ -150,7 +156,12 @@ def add_patient():
             age=age,
             contact_number=contact_number,
             appointment_id=appointment_id,
-            scan_file=file_path
+            scan_file=file_path,
+            final_result=final_result,
+            prediction_status=prediction_status,
+            date_in=date_in
+            
+
         )
         db.session.add(new_patient)
         db.session.commit()
@@ -171,7 +182,11 @@ def get_patients():
             'age': patient.age,
             'contact_number': patient.contact_number,
             'appointment_id': patient.appointment_id,
-            'scan_file': patient.scan_file
+            'scan_file': patient.scan_file,
+            'final_result': patient.final_result,
+            'prediction_status': patient.prediction_status,
+            'date_in': patient.date_in
+            
 
         }for patient in patients]),200
     else:
@@ -188,7 +203,10 @@ def get_patient(id):
             'age': patient.age,
             'contact_number': patient.contact_number,
             'appointment_id': patient.appointment_id,
-            'scan_file': patient.scan_file
+            'scan_file': patient.scan_file,
+            'final_result': patient.final_result,
+            'prediction_status': patient.prediction_status,
+            'date_in': patient.date_in
         }), 200
     else:
         return jsonify({'message': 'Patient not found'}), 404
@@ -202,11 +220,11 @@ def update_patient(id):
     
     data = request.get_json()
     patient.name = data.get('name', patient.name)
-    # The following fields (date_in, final_result, prediction_status) are not defined in the Patient model.
-    # Uncomment or update these if they are added to the model.
-    # patient.date_in = data.get('date_in', patient.date_in)
-    # patient.final_result = data.get('final_result', patient.final_result)
-    # patient.prediction_status = data.get('prediction_status', patient.prediction_status)
+    data = request.get_json()
+    patient.name = data.get('name', patient.name)
+    patient.final_result = data.get('final_result', patient.final_result)
+    patient.prediction_status = data.get('prediction_status', patient.prediction_status)
+    patient.date_in = data.get('date_in', patient.date_in)
 
     db.session.commit()
     return jsonify({'message': 'Patient updated successfully'}), 200
