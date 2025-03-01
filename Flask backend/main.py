@@ -300,5 +300,15 @@ def create_notification():
 
     return jsonify({'message': 'Notification created successfully'}), 201
 
+# Get all notifications
+@app.route('/notifications', methods=['GET'])
+def get_notifications():
+    notifications = Notification.query.all()
+    return jsonify([{
+        'user_id': notification.user_id,
+        'message': notification.message,
+        'timestamp': notification.timestamp
+    } for notification in notifications]), 200
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
