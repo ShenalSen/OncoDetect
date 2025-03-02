@@ -282,16 +282,19 @@ def get_appointments():
         'description': appointment.description
     } for appointment in appointments]), 200
 
-# Get appointment by ID
 @app.route('/appointment/<int:id>', methods=['GET'])
 def get_appointment(id):
     appointment = Appointment.query.get(id)
     if not appointment:
         return jsonify({'message': 'Appointment not found'}), 404
+    
+    # Format the appointment_date as a string in the desired format
+    appointment_date_str = appointment.appointment_date.strftime('%Y-%m-%d %H:%M:%S')
+    
     return jsonify({
         'patient_id': appointment.patient_id,
         'doctor_id': appointment.doctor_id,
-        'appointment_date': appointment.appointment_date,
+        'appointment_date': appointment_date_str,
         'description': appointment.description
     }), 200
 
