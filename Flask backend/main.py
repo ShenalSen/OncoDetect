@@ -284,7 +284,7 @@ def get_appointments():
     } for appointment in appointments]), 200
 
 
-
+#Get appointments by id
 @app.route('/appointment/<string:patient_id>', methods=['GET'])
 def get_appointment(patient_id):
     appointment = Appointment.query.filter_by(patient_id=patient_id).first()
@@ -329,6 +329,49 @@ def get_notifications():
         'message': notification.message,
         'timestamp': notification.timestamp
     } for notification in notifications]), 200
+
+# Add Doctor Proof
+@app.route('/doctorproof', methods=['POST'])
+def add_doctor_proof():
+    data = request.form
+    doctor_id = data.get('doctor_id')
+
+    if 'proof_file' not in request.files:
+        return jsonify({'message': 'No file part in the request'}), 400
+    file = request.files['proof_file']
+
+    if file.filename == '':
+        return jsonify({'message': 'No file selected'}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        # Create a new doctor proof record
+        new_doctor_proof = DoctorProof(
+            doctor_id=doctor_id,
+            proof_file=file_path
+        )
+        db.session.add(new_doctor_proof)
+        db.session.commit()
+
+        return jsonify({'message': 'Doctor proof uploaded successfully'}), 201
+    else:
+        return jsonify({'message': 'Invalid file type'}), 400
+
+# Get Doctor Proof by Doctor ID
+@app.route('/doctorproof/<string:doctor_id>', methods=['GET'])
+def get_doctor_proof(doctor_id):
+    doctor_proof = DoctorProof.query.filter_by(doctor_id=doctor_id).first()
+    if doctor_proof:
+        return jsonify({
+            'doctor_id': doctor_proof.doctor_id,
+            'proof_file': doctor_proof.proof_file,
+            'upload_date': doctor_proof.upload_date
+        }), 200
+    else:
+        return jsonify({'message': 'Doctor proof not found'}), 404
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
