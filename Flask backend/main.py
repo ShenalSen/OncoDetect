@@ -176,7 +176,7 @@ def add_patient():
             appointment_id=appointment_id,
             scan_file=file_path
         )
-        db.session.add(new_patient)
+        db.session.add(new_patient) 
         db.session.commit()
 
         return jsonify({'message': 'Patient added successfully'}), 201
@@ -335,6 +335,7 @@ def get_notifications():
 def add_doctor_proof():
     data = request.form
     doctor_id = data.get('doctor_id')
+    
 
     if 'proof_file' not in request.files:
         return jsonify({'message': 'No file part in the request'}), 400
@@ -351,7 +352,8 @@ def add_doctor_proof():
         # Create a new doctor proof record
         new_doctor_proof = DoctorProof(
             doctor_id=doctor_id,
-            proof_file=file_path
+            proof_file=file_path,
+            
         )
         db.session.add(new_doctor_proof)
         db.session.commit()
