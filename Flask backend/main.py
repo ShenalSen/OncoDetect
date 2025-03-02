@@ -201,7 +201,7 @@ def get_patients():
     else:
         return jsonify({'message': 'No patients found'}), 404
     
-# Get patient details by ID
+#Get patient details by ID
 @app.route('/patient/<int:id>', methods=['GET'])
 def get_patient(id):
     patient = Patient.query.filter_by(patient_id=id).first() 
@@ -217,7 +217,7 @@ def get_patient(id):
     else:
         return jsonify({'message': 'Patient not found'}), 404
     
-# Update patient details
+#Update patient details
 @app.route('/patient/<int:id>', methods=['PUT'])
 def update_patient(id):
     patient = Patient.query.get(id)
@@ -241,7 +241,7 @@ def delete_patient(id):
     print("Patient deleted and changes committed to the database.")
     return jsonify({'message': 'Patient deleted successfully'}),200
 
-# Create a new appointment
+#Create a new appointment
 @app.route('/appointment', methods=['POST'])
 def create_appointment():
     data = request.get_json()
@@ -271,9 +271,10 @@ def create_appointment():
 
     return jsonify({'message': 'Appointment created successfully'}), 201
 
-# Get all appointments
+#Get all appointments
 @app.route('/appointments', methods=['GET'])
 def get_appointments():
+    
     appointments = Appointment.query.all()
     return jsonify([{
         'patient_id': appointment.patient_id,
@@ -282,9 +283,11 @@ def get_appointments():
         'description': appointment.description
     } for appointment in appointments]), 200
 
-@app.route('/appointment/<int:id>', methods=['GET'])
-def get_appointment(id):
-    appointment = Appointment.query.get(id)
+
+
+@app.route('/appointment/<string:patient_id>', methods=['GET'])
+def get_appointment(patient_id):
+    appointment = Appointment.query.filter_by(patient_id=patient_id).first()
     if not appointment:
         return jsonify({'message': 'Appointment not found'}), 404
     
@@ -297,6 +300,8 @@ def get_appointment(id):
         'appointment_date': appointment_date_str,
         'description': appointment.description
     }), 200
+
+
 
 # Create a notification
 @app.route('/notification',methods=['POST'])
