@@ -399,5 +399,18 @@ def update_doctor_proof(doctor_id):
     else:
         return jsonify({'message': 'No proof file provided'}), 400
 
+# Delete Doctor Proof by Doctor ID
+@app.route('/doctorproof/<string:doctor_id>', methods=['DELETE'])
+def delete_doctor_proof(doctor_id):
+    doctor_proof = DoctorProof.query.filter_by(doctor_id=doctor_id).first()
+    if not doctor_proof:
+        return jsonify({'message': 'Doctor proof not found'}), 404
+
+    db.session.delete(doctor_proof)
+    db.session.commit()
+
+    return jsonify({'message': 'Doctor proof deleted successfully'}), 200
+
+    
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
