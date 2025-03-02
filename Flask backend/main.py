@@ -373,5 +373,31 @@ def get_doctor_proof(doctor_id):
     else:
         return jsonify({'message': 'Doctor proof not found'}), 404
 
+# Update Doctor Proof by Doctor ID
+@app.route('/doctorproof/<string:doctor_id>', methods=['PUT'])
+def update_doctor_proof(doctor_id):
+    doctor_proof = DoctorProof.query.filter_by(doctor_id=doctor_id).first()
+    if not doctor_proof:
+        return jsonify({'message': 'Doctor proof not found'}), 404
+
+    if 'proof_file' in request.files:
+        file = request.files['proof_file']
+        if file.filename == '':
+            return jsonify({'message': 'No file selected'}), 400
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+
+            # Update the proof file path
+            doctor_proof.proof_file = file_path
+            db.session.commit()
+
+            return jsonify({'message': 'Doctor proof updated successfully'}), 200
+        else:
+            return jsonify({'message': 'Invalid file type'}), 400
+    else:
+        return jsonify({'message': 'No proof file provided'}), 400
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
