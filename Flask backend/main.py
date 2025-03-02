@@ -6,6 +6,9 @@ from flask_login import LoginManager, UserMixin
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import os
+from datetime import datetime
+from sqlalchemy import DateTime
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
@@ -241,12 +244,20 @@ def delete_patient(id):
 # Create a new appointment
 @app.route('/appointment', methods=['POST'])
 def create_appointment():
-    data=request.get_json()
-    patient_id=data.get('patient_id')
+    data = request.get_json()
+    
+    
+    try:
+        # Convert the 'appointment_date' string into a datetime object
+        appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S') 
+    except ValueError:
+        return jsonify({"error": "Invalid date format. Please use 'YYYY-MM-DD HH:MM:SS' format."}), 400
+
+    patient_id = data.get('patient_id')
     doctor_id = data.get('doctor_id')
-    appointment_date = data.get('appointment_date')
     description = data.get('description')
 
+   
     new_appointment = Appointment(
         patient_id=patient_id,
         doctor_id=doctor_id,
@@ -254,6 +265,7 @@ def create_appointment():
         description=description
     )
 
+  
     db.session.add(new_appointment)
     db.session.commit()
 
