@@ -15,38 +15,30 @@ const data = [
   { name: "Sanduni Nihara", dateIn: "Jan 06, 2025", finalResult: "Incoming", predictionStatus: "Completed" }
 ];
 const PastPredictions = () => {
-    return (
-        <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center py-4">
-                <h1 className="text-2xl font-semibold">Past Predictions</h1>
-                <div>
-                    <input type="search" placeholder="Search Past Predictions" className="input input-bordered" />
-                </div>
-            </div>
-            <div className="overflow-x-auto">
-                <table className="table w-full">
-                    <thead>
-                        <tr>
-                            <th>Patient Name</th>
-                            <th>Date In</th>
-                            <th>Final Result</th>
-                            <th>Prediction Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item, index) => (
-                            <tr key={index} className={item.status === "Critical" ? "bg-red-200" : ""}>
-                                <td>{item.name}</td>
-                                <td>{item.dateIn}</td>
-                                <td>{item.result}</td>
-                                <td>{item.status}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
+  return (
+      <div className="bg-white shadow-lg rounded-lg p-4 max-w-4xl mx-auto mt-5">
+          <div className="overflow-x-auto">
+              <table className="table-auto w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+                      <tr>
+                          <th scope="col" className="px-4 py-2">Date In</th>
+                          <th scope="col" className="px-4 py-2">Final Result</th>
+                          <th scope="col" className="px-4 py-2">Prediction Status</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {data.map((item, index) => (
+                          <tr key={index} className="bg-white border-b">
+                              <td className="px-4 py-2">{item.dateIn}</td>
+                              <td className="px-4 py-2">{item.finalResult}</td>
+                              <td className="px-4 py-2">{item.status}</td>
+                          </tr>
+                      ))}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  );
 };
 
 export default PastPredictions;
