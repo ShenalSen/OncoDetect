@@ -434,6 +434,23 @@ with app.app_context():
     db.create_all()
 
 
+#Creating diagnostic results
+@app.route('/diagnostic_result', methods=['POST'])
+def create_diagnostic_result():
+    data = request.form
+    patient_id = data.get('patient_id')
+    appointment_id = data.get('appointment_id')
+
+    total_percentage = data.get('total_percentage')
+    normal_percentage = data.get('normal_percentage')
+    abnormal_percentage = data.get('abnormal_percentage')
+    ambiguous_percentage = data.get('ambiguous_percentage')
+    doctor_recommendation = data.get('doctor_recommendation')
+    additional_insights = data.get('additional_insights')
+    final_result = data.get('final_result')
+
+
+
 
 
 if __name__ == "__main__":
