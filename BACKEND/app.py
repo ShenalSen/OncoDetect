@@ -482,7 +482,31 @@ def create_diagnostic_result():
     db.session.commit()
 
     return jsonify({'message': 'Diagnostic result created successfully'}), 201
+# getting diagnostic results for patients 
+@app.route('/diagnostic_result/patient/<string:patient_id>', methods=['GET'])
+def get_diagnostic_results_for_patient(patient_id):
+    results = DiagnosticResult.query.filter_by(patient_id=patient_id).all()
+    if not results:
+        return jsonify({'message': 'No diagnostic results found for this patient'}), 404
 
+    output = []
+    for r in results:
+        output.append({
+            'id': r.id,
+            'patient_id': r.patient_id,
+            'appointment_id': r.appointment_id,
+            'annotated_image': r.annotated_image,
+            'total_percentage': r.total_percentage,
+            'normal_percentage': r.normal_percentage,
+            'abnormal_percentage': r.abnormal_percentage,
+            'ambiguous_percentage': r.ambiguous_percentage,
+            'doctor_recommendation': r.doctor_recommendation,
+            'additional_insights': r.additional_insights,
+            'final_result': r.final_result,
+            'date_of_scan': r.date_of_scan.strftime('%Y-%m-%d %H:%M:%S') if r.date_of_scan else None
+        })
+
+    return jsonify(output), 200
 
 
 if __name__ == "__main__":
