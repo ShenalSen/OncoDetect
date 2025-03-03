@@ -549,37 +549,53 @@ def get_diagnostic_results_for_patient(patient_id):
 
 @app.route('/patient_data', methods=['POST'])
 def patient_data():
+    """
+    This endpoint receives patient data, processes it (e.g., runs your 
+    breast cancer detection logic), and returns a PDF report.
+    """
+
+    # Get patient data (JSON or form)
     data = request.get_json()
     if not data:
         return jsonify({"message": "No patient data provided"}), 400
 
+    # Example fields you might receive:
     patient_name = data.get('name', 'Unknown')
     patient_id = data.get('patient_id', 'N/A')
     diagnosis = data.get('diagnosis', 'Pending')
     notes = data.get('notes', '')
 
+
+    # Generate a PDF report
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
+    # Title
     pdf.cell(200, 10, txt="Breast Cancer Detection Report", ln=True, align='C')
-    pdf.ln(10)
+    pdf.ln(10)  # line break
 
+    # Basic patient info
     pdf.cell(200, 10, txt=f"Patient Name: {patient_name}", ln=True)
     pdf.cell(200, 10, txt=f"Patient ID:   {patient_id}", ln=True)
     pdf.ln(5)
 
+    # Diagnosis / results
     pdf.cell(200, 10, txt=f"Diagnosis:    {diagnosis}", ln=True)
     pdf.cell(200, 10, txt="Notes:", ln=True)
     pdf.multi_cell(0, 10, txt=notes)
     pdf.ln(5)
 
+    # Footer
     pdf.cell(200, 10, txt="--- End of Report ---", ln=True, align='C')
 
-    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    # Convert PDF to bytes so we can return it directly
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')  # 'S' = return as string
 
+    # Send the PDF as a file download
     response = make_response(pdf_bytes)
     response.headers.set('Content-Type', 'application/pdf')
+    # Prompt download with a filename of your choice
     response.headers.set('Content-Disposition', 'attachment', filename='BreastCancerReport.pdf')
     return response
 
