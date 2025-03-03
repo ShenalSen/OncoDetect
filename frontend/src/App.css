@@ -4,7 +4,7 @@
   justify-content: center; /* Center content horizontally */
   align-items: center; /* Center content vertically */
   min-height: 100vh; /* Ensure it takes at least the height of the viewport */
-  max-width: 1280px; /* Maximum width of the application */
+  max-width: 1920px; /* Adjusted for larger maximum width to accommodate larger component */
   margin: 0 auto; /* Center the app in the middle of the page */
   padding: 2rem; /* Padding around the content */
   text-align: center; /* Align text to center for all text inside root */
@@ -51,4 +51,31 @@
 
 .read-the-docs {
   color: #888; /* Styling for documentation link */
+}
+
+/* Styling for the Past Predictions container */
+.bg-white {
+  background-color: #fff; /* Ensure background color is set for outer container */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Shadow for outer container */
+}
+
+.bg-gray-100 {
+  background-color: #f7f7f7; /* Light gray background for inner container */
+  shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.05); /* Inner shadow for Patient Data container */
+}
+
+.rounded-lg {
+  border-radius: 0.5rem; /* Rounded corners for containers */
+}
+
+.overflow-x-auto {
+  overflow-x: auto; /* Allow horizontal scrolling within tables if necessary */
+}
+
+.table-auto {
+  width: 100%; /* Full width tables */
+}
+
+.text-center {
+  text-align: center; /* Center align text */
 }
