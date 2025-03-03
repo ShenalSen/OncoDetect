@@ -18,12 +18,27 @@ function App() {
           <LSideBar />
         </div>
         
-        {/* Main content expands to fill remaining space. */}
-        <div className="flex-1">
-          <Routes>
-            <Route path="/doctor" element={<Doctor />} />
-            <Route path="/past-predictions" element={<PredictionTable />} />
-          </Routes>
+        {/* Main area: top bar + routed pages below */}
+        <div className="flex-1 flex flex-col">
+          {/* Top bar (Dashboard + Search) */}
+          <div className="flex items-center justify-between bg-white px-6 py-4 shadow-md">
+            <h1 className="text-2xl font-bold">Dashboard</h1>
+            <div>
+              <input
+                type="text"
+                placeholder="Search Past Predictions"
+                className="border border-gray-300 rounded-md px-3 py-1"
+              />
+            </div>
+          </div>
+
+          {/* Main content (pages) goes here */}
+          <div className="p-6 flex-1">
+            <Routes>
+              <Route path="/doctor" element={<Doctor />} />
+              <Route path="/past-predictions" element={<PredictionTable />} />
+            </Routes>
+          </div>
         </div>
       </div>
     </BrowserRouter>
