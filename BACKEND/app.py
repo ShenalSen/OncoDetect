@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt
@@ -78,7 +78,6 @@ class Notification(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     message = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
-
 
 class DoctorProof(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -558,7 +557,29 @@ def patient_data():
     diagnosis = data.get('diagnosis', 'Pending')
     notes = data.get('notes', '')
 
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt="Breast Cancer Detection Report", ln=True, align='C')
+    pdf.ln(10)
+
+    pdf.cell(200, 10, txt=f"Patient Name: {patient_name}", ln=True)
+    pdf.cell(200, 10, txt=f"Patient ID:   {patient_id}", ln=True)
+    pdf.ln(5)
+
+    pdf.cell(200, 10, txt=f"Diagnosis:    {diagnosis}", ln=True)
+    pdf.cell(200, 10, txt="Notes:", ln=True)
+    pdf.multi_cell(0, 10, txt=notes)
+    pdf.ln(5)
+
+    pdf.cell(200, 10, txt="--- End of Report ---", ln=True, align='C')
+
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+
     return "test"
+
+
 
 
 if __name__ == "__main__":
