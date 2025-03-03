@@ -201,6 +201,8 @@ def get_patients():
     else:
         return jsonify({'message': 'No patients found'}), 404
     
+
+
 #Get patient details by ID
 @app.route('/patient/<int:id>', methods=['GET'])
 def get_patient(id):
@@ -217,6 +219,9 @@ def get_patient(id):
     else:
         return jsonify({'message': 'Patient not found'}), 404
     
+
+
+
 #Update patient details
 @app.route('/patient/<int:id>', methods=['PUT'])
 def update_patient(id):
@@ -240,6 +245,8 @@ def delete_patient(id):
     db.session.commit()
     print("Patient deleted and changes committed to the database.")
     return jsonify({'message': 'Patient deleted successfully'}),200
+
+
 
 #Create a new appointment
 @app.route('/appointment', methods=['POST'])
@@ -271,6 +278,8 @@ def create_appointment():
 
     return jsonify({'message': 'Appointment created successfully'}), 201
 
+
+
 #Get all appointments
 @app.route('/appointments', methods=['GET'])
 def get_appointments():
@@ -282,6 +291,7 @@ def get_appointments():
         'appointment_date': appointment.appointment_date,
         'description': appointment.description
     } for appointment in appointments]), 200
+
 
 
 #Get appointments by id
@@ -320,6 +330,9 @@ def create_notification():
 
     return jsonify({'message': 'Notification created successfully'}), 201
 
+
+
+
 # Get all notifications
 @app.route('/notifications', methods=['GET'])
 def get_notifications():
@@ -330,12 +343,15 @@ def get_notifications():
         'timestamp': notification.timestamp
     } for notification in notifications]), 200
 
+
+
+
 # Add Doctor Proof
 @app.route('/doctorproof', methods=['POST'])
 def add_doctor_proof():
     data = request.form
     doctor_id = data.get('doctor_id')
-    
+
 
     if 'proof_file' not in request.files:
         return jsonify({'message': 'No file part in the request'}), 400
@@ -349,11 +365,14 @@ def add_doctor_proof():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
+
+
+
         # Create a new doctor proof record
         new_doctor_proof = DoctorProof(
             doctor_id=doctor_id,
             proof_file=file_path,
-            
+
         )
         db.session.add(new_doctor_proof)
         db.session.commit()
@@ -361,6 +380,9 @@ def add_doctor_proof():
         return jsonify({'message': 'Doctor proof uploaded successfully'}), 201
     else:
         return jsonify({'message': 'Invalid file type'}), 400
+
+
+
 
 # Get Doctor Proof by Doctor ID
 @app.route('/doctorproof/<string:doctor_id>', methods=['GET'])
@@ -374,6 +396,9 @@ def get_doctor_proof(doctor_id):
         }), 200
     else:
         return jsonify({'message': 'Doctor proof not found'}), 404
+
+
+
 
 # Update Doctor Proof by Doctor ID
 @app.route('/doctorproof/<string:doctor_id>', methods=['PUT'])
@@ -401,6 +426,9 @@ def update_doctor_proof(doctor_id):
     else:
         return jsonify({'message': 'No proof file provided'}), 400
 
+
+
+
 # Delete Doctor Proof by Doctor ID
 @app.route('/doctorproof/<string:doctor_id>', methods=['DELETE'])
 def delete_doctor_proof(doctor_id):
@@ -412,6 +440,9 @@ def delete_doctor_proof(doctor_id):
     db.session.commit()
 
     return jsonify({'message': 'Doctor proof deleted successfully'}), 200
+
+
+
 
 #Model definition for prediction results
 class DiagnosticResult(db.Model):
@@ -434,6 +465,7 @@ with app.app_context():
     db.create_all()
 
 
+
 #Creating diagnostic results
 @app.route('/diagnostic_result', methods=['POST'])
 def create_diagnostic_result():
@@ -448,6 +480,8 @@ def create_diagnostic_result():
     doctor_recommendation = data.get('doctor_recommendation')
     additional_insights = data.get('additional_insights')
     final_result = data.get('final_result')
+
+
 
   # Convert to floats
     try:
@@ -482,7 +516,10 @@ def create_diagnostic_result():
     db.session.commit()
 
     return jsonify({'message': 'Diagnostic result created successfully'}), 201
-# getting diagnostic results for patients 
+
+
+
+# getting diagnostic results for patients
 @app.route('/diagnostic_result/patient/<string:patient_id>', methods=['GET'])
 def get_diagnostic_results_for_patient(patient_id):
     results = DiagnosticResult.query.filter_by(patient_id=patient_id).all()
@@ -507,6 +544,12 @@ def get_diagnostic_results_for_patient(patient_id):
         })
 
     return jsonify(output), 200
+
+
+
+@app.route('/patient_data',methods=['POST'])
+def patient_data(patient):
+    return "test"
 
 
 if __name__ == "__main__":
