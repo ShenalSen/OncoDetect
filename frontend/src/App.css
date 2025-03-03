@@ -1,14 +1,14 @@
 /* App.css */
 #root {
-  display: flex; /* Flex container for vertical and horizontal centering */
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
   min-height: 100vh; /* Ensure it takes at least the height of the viewport */
-  max-width: 1920px; /* Adjusted for larger maximum width to accommodate larger component */
-  margin: 0 auto; /* Center the app in the middle of the page */
-  padding: 2rem; /* Padding around the content */
-  text-align: center; /* Align text to center for all text inside root */
+  width: 100%;       /* Make sure root takes full width */
+  padding: 20px;     /* Padding around the content */
+  box-sizing: border-box; /* Adjusts box-sizing to include padding and border */
+
+  /* Removed the 'display: flex; justify-content: center; align-items: center;' */
+  /* so that it no longer restricts the child container to a smaller centered box. */
 }
+
 
 .logo {
   height: 6em;
@@ -41,41 +41,41 @@
 }
 
 .card {
-  width: 100%; /* Make sure card uses full width of its container */
-  max-width: 960px; /* Maximum width of the card */
-  margin: auto; /* Auto margins for horizontal centering */
-  padding: 2em; /* Padding inside the card */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow for better visibility */
-  border-radius: 8px; /* Rounded corners */
+  width: 100%; 
+  max-width: 960px; 
+  margin: auto; 
+  padding: 2em; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
 }
 
 .read-the-docs {
-  color: #888; /* Styling for documentation link */
+  color: #888;
 }
 
-/* Styling for the Past Predictions container */
 .bg-white {
-  background-color: #fff; /* Ensure background color is set for outer container */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Shadow for outer container */
+  background-color: #fff;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .bg-gray-100 {
-  background-color: #f7f7f7; /* Light gray background for inner container */
-  shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.05); /* Inner shadow for Patient Data container */
+  background-color: #f7f7f7;
+  shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.05);
 }
 
 .rounded-lg {
-  border-radius: 0.5rem; /* Rounded corners for containers */
+  border-radius: 0.5rem;
 }
 
 .overflow-x-auto {
-  overflow-x: auto; /* Allow horizontal scrolling within tables if necessary */
+  overflow-x: auto;
 }
 
 .table-auto {
-  width: 100%; /* Full width tables */
+  width: 100%;
 }
 
 .text-center {
-  text-align: center; /* Center align text */
+  text-align: center;
 }
