@@ -1,8 +1,13 @@
+/* App.css */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  display: flex; /* Flex container for vertical and horizontal centering */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  min-height: 100vh; /* Ensure it takes at least the height of the viewport */
+  max-width: 1280px; /* Maximum width of the application */
+  margin: 0 auto; /* Center the app in the middle of the page */
+  padding: 2rem; /* Padding around the content */
+  text-align: center; /* Align text to center for all text inside root */
 }
 
 .logo {
@@ -11,9 +16,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -34,9 +41,14 @@
 }
 
 .card {
-  padding: 2em;
+  width: 100%; /* Make sure card uses full width of its container */
+  max-width: 960px; /* Maximum width of the card */
+  margin: auto; /* Auto margins for horizontal centering */
+  padding: 2em; /* Padding inside the card */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow for better visibility */
+  border-radius: 8px; /* Rounded corners */
 }
 
 .read-the-docs {
-  color: #888;
+  color: #888; /* Styling for documentation link */
 }
