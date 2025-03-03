@@ -10,7 +10,7 @@ from datetime import datetime
 from sqlalchemy import DateTime
 
 
-app = Flask(__name__)
+app = Flask(_name_)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 # Secret Key for session management
@@ -201,6 +201,8 @@ def get_patients():
     else:
         return jsonify({'message': 'No patients found'}), 404
     
+
+
 #Get patient details by ID
 @app.route('/patient/<int:id>', methods=['GET'])
 def get_patient(id):
@@ -217,6 +219,9 @@ def get_patient(id):
     else:
         return jsonify({'message': 'Patient not found'}), 404
     
+
+
+
 #Update patient details
 @app.route('/patient/<int:id>', methods=['PUT'])
 def update_patient(id):
@@ -240,6 +245,8 @@ def delete_patient(id):
     db.session.commit()
     print("Patient deleted and changes committed to the database.")
     return jsonify({'message': 'Patient deleted successfully'}),200
+
+
 
 #Create a new appointment
 @app.route('/appointment', methods=['POST'])
@@ -271,6 +278,8 @@ def create_appointment():
 
     return jsonify({'message': 'Appointment created successfully'}), 201
 
+
+
 #Get all appointments
 @app.route('/appointments', methods=['GET'])
 def get_appointments():
@@ -282,6 +291,7 @@ def get_appointments():
         'appointment_date': appointment.appointment_date,
         'description': appointment.description
     } for appointment in appointments]), 200
+
 
 
 #Get appointments by id
@@ -320,6 +330,9 @@ def create_notification():
 
     return jsonify({'message': 'Notification created successfully'}), 201
 
+
+
+
 # Get all notifications
 @app.route('/notifications', methods=['GET'])
 def get_notifications():
@@ -329,6 +342,9 @@ def get_notifications():
         'message': notification.message,
         'timestamp': notification.timestamp
     } for notification in notifications]), 200
+
+
+
 
 # Add Doctor Proof
 @app.route('/doctorproof', methods=['POST'])
@@ -349,6 +365,9 @@ def add_doctor_proof():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
+
+
+
         # Create a new doctor proof record
         new_doctor_proof = DoctorProof(
             doctor_id=doctor_id,
@@ -362,6 +381,9 @@ def add_doctor_proof():
     else:
         return jsonify({'message': 'Invalid file type'}), 400
 
+
+
+
 # Get Doctor Proof by Doctor ID
 @app.route('/doctorproof/<string:doctor_id>', methods=['GET'])
 def get_doctor_proof(doctor_id):
@@ -374,6 +396,9 @@ def get_doctor_proof(doctor_id):
         }), 200
     else:
         return jsonify({'message': 'Doctor proof not found'}), 404
+
+
+
 
 # Update Doctor Proof by Doctor ID
 @app.route('/doctorproof/<string:doctor_id>', methods=['PUT'])
@@ -401,6 +426,9 @@ def update_doctor_proof(doctor_id):
     else:
         return jsonify({'message': 'No proof file provided'}), 400
 
+
+
+
 # Delete Doctor Proof by Doctor ID
 @app.route('/doctorproof/<string:doctor_id>', methods=['DELETE'])
 def delete_doctor_proof(doctor_id):
@@ -413,6 +441,110 @@ def delete_doctor_proof(doctor_id):
 
     return jsonify({'message': 'Doctor proof deleted successfully'}), 200
 
-    
-if __name__ == "__main__":
+
+
+
+#Model definition for prediction results
+class DiagnosticResult(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.String(100), nullable=False)
+    appointment_id = db.Column(db.String(100), nullable=True)
+    annotated_image = db.Column(db.String(256), nullable=True)
+
+    total_percentage = db.Column(db.Float, nullable=True)
+    normal_percentage = db.Column(db.Float, nullable=True)
+    abnormal_percentage = db.Column(db.Float, nullable=True)
+    ambiguous_percentage = db.Column(db.Float, nullable=True)
+
+    date_of_scan = db.Column(db.DateTime, default=db.func.current_timestamp())
+    doctor_recommendation = db.Column(db.String(512), nullable=True)
+    additional_insights = db.Column(db.String(512), nullable=True)
+    final_result = db.Column(db.String(512), nullable=True)
+
+with app.app_context():
+    db.create_all()
+
+
+
+#Creating diagnostic results
+@app.route('/diagnostic_result', methods=['POST'])
+def create_diagnostic_result():
+    data = request.form
+    patient_id = data.get('patient_id')
+    appointment_id = data.get('appointment_id')
+
+    total_percentage = data.get('total_percentage')
+    normal_percentage = data.get('normal_percentage')
+    abnormal_percentage = data.get('abnormal_percentage')
+    ambiguous_percentage = data.get('ambiguous_percentage')
+    doctor_recommendation = data.get('doctor_recommendation')
+    additional_insights = data.get('additional_insights')
+    final_result = data.get('final_result')
+
+
+
+  # Convert to floats
+    try:
+        total_percentage = float(total_percentage) if total_percentage else None
+        normal_percentage = float(normal_percentage) if normal_percentage else None
+        abnormal_percentage = float(abnormal_percentage) if abnormal_percentage else None
+        ambiguous_percentage = float(ambiguous_percentage) if ambiguous_percentage else None
+    except ValueError:
+        return jsonify({"message": "Invalid percentage values"}), 400
+
+    annotated_image_file = request.files.get('annotated_image')
+    annotated_image_path = None
+
+    if annotated_image_file and allowed_file(annotated_image_file.filename):
+        filename = secure_filename(annotated_image_file.filename)
+        annotated_image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        annotated_image_file.save(annotated_image_path)
+
+    new_result = DiagnosticResult(
+        patient_id=patient_id,
+        appointment_id=appointment_id,
+        annotated_image=annotated_image_path,
+        total_percentage=total_percentage,
+        normal_percentage=normal_percentage,
+        abnormal_percentage=abnormal_percentage,
+        ambiguous_percentage=ambiguous_percentage,
+        doctor_recommendation=doctor_recommendation,
+        additional_insights=additional_insights,
+        final_result=final_result
+    )
+    db.session.add(new_result)
+    db.session.commit()
+
+    return jsonify({'message': 'Diagnostic result created successfully'}), 201
+
+
+
+# getting diagnostic results for patients
+@app.route('/diagnostic_result/patient/<string:patient_id>', methods=['GET'])
+def get_diagnostic_results_for_patient(patient_id):
+    results = DiagnosticResult.query.filter_by(patient_id=patient_id).all()
+    if not results:
+        return jsonify({'message': 'No diagnostic results found for this patient'}), 404
+
+    output = []
+    for r in results:
+        output.append({
+            'id': r.id,
+            'patient_id': r.patient_id,
+            'appointment_id': r.appointment_id,
+            'annotated_image': r.annotated_image,
+            'total_percentage': r.total_percentage,
+            'normal_percentage': r.normal_percentage,
+            'abnormal_percentage': r.abnormal_percentage,
+            'ambiguous_percentage': r.ambiguous_percentage,
+            'doctor_recommendation': r.doctor_recommendation,
+            'additional_insights': r.additional_insights,
+            'final_result': r.final_result,
+            'date_of_scan': r.date_of_scan.strftime('%Y-%m-%d %H:%M:%S') if r.date_of_scan else None
+        })
+
+    return jsonify(output), 200
+
+
+if _name_ == "_main_":
     app.run(debug=True, host='0.0.0.0', port=5000)
