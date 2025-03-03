@@ -449,7 +449,39 @@ def create_diagnostic_result():
     additional_insights = data.get('additional_insights')
     final_result = data.get('final_result')
 
+  # Convert to floats
+    try:
+        total_percentage = float(total_percentage) if total_percentage else None
+        normal_percentage = float(normal_percentage) if normal_percentage else None
+        abnormal_percentage = float(abnormal_percentage) if abnormal_percentage else None
+        ambiguous_percentage = float(ambiguous_percentage) if ambiguous_percentage else None
+    except ValueError:
+        return jsonify({"message": "Invalid percentage values"}), 400
 
+    annotated_image_file = request.files.get('annotated_image')
+    annotated_image_path = None
+
+    if annotated_image_file and allowed_file(annotated_image_file.filename):
+        filename = secure_filename(annotated_image_file.filename)
+        annotated_image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        annotated_image_file.save(annotated_image_path)
+
+    new_result = DiagnosticResult(
+        patient_id=patient_id,
+        appointment_id=appointment_id,
+        annotated_image=annotated_image_path,
+        total_percentage=total_percentage,
+        normal_percentage=normal_percentage,
+        abnormal_percentage=abnormal_percentage,
+        ambiguous_percentage=ambiguous_percentage,
+        doctor_recommendation=doctor_recommendation,
+        additional_insights=additional_insights,
+        final_result=final_result
+    )
+    db.session.add(new_result)
+    db.session.commit()
+
+    return jsonify({'message': 'Diagnostic result created successfully'}), 201
 
 
 
