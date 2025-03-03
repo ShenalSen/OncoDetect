@@ -8,7 +8,7 @@ from flask_cors import CORS
 import os
 from datetime import datetime
 from sqlalchemy import DateTime
-
+from fpdf import FPDF
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
@@ -547,8 +547,17 @@ def get_diagnostic_results_for_patient(patient_id):
 
 
 
-@app.route('/patient_data',methods=['POST'])
-def patient_data(patient):
+@app.route('/patient_data', methods=['POST'])
+def patient_data():
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "No patient data provided"}), 400
+
+    patient_name = data.get('name', 'Unknown')
+    patient_id = data.get('patient_id', 'N/A')
+    diagnosis = data.get('diagnosis', 'Pending')
+    notes = data.get('notes', '')
+
     return "test"
 
 
