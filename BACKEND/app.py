@@ -79,6 +79,7 @@ class Notification(db.Model):
     message = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+
 class DoctorProof(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     doctor_id = db.Column(db.String(100), nullable=False)
@@ -577,9 +578,10 @@ def patient_data():
 
     pdf_bytes = pdf.output(dest='S').encode('latin-1')
 
-    return "test"
-
-
+    response = make_response(pdf_bytes)
+    response.headers.set('Content-Type', 'application/pdf')
+    response.headers.set('Content-Disposition', 'attachment', filename='BreastCancerReport.pdf')
+    return response
 
 
 if __name__ == "__main__":
