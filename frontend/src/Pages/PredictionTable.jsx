@@ -16,26 +16,29 @@ const data = [
 ];
 const PastPredictions = () => {
   return (
-      <div className="bg-white shadow-lg rounded-lg p-4 max-w-4xl mx-auto mt-5">
-          <div className="overflow-x-auto">
-              <table className="table-auto w-full text-sm text-left text-gray-500">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-100">
-                      <tr>
-                          <th scope="col" className="px-4 py-2">Date In</th>
-                          <th scope="col" className="px-4 py-2">Final Result</th>
-                          <th scope="col" className="px-4 py-2">Prediction Status</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {data.map((item, index) => (
-                          <tr key={index} className="bg-white border-b">
-                              <td className="px-4 py-2">{item.dateIn}</td>
-                              <td className="px-4 py-2">{item.finalResult}</td>
-                              <td className="px-4 py-2">{item.status}</td>
+      <div className="flex justify-center my-6">
+          <div className="bg-white shadow-lg rounded-lg p-4 max-w-4xl">
+              <h2 className="text-lg font-semibold mb-3">Patient Data</h2>
+              <div className="overflow-x-auto">
+                  <table className="table-auto w-full text-sm text-left text-gray-500">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                          <tr>
+                              <th scope="col" className="px-4 py-2">Date In</th>
+                              <th scope="col" className="px-4 py-2">Final Result</th>
+                              <th scope="col" className="px-4 py-2">Prediction Status</th>
                           </tr>
-                      ))}
-                  </tbody>
-              </table>
+                      </thead>
+                      <tbody>
+                          {data.map((item, index) => (
+                              <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                                  <td className="px-4 py-2">{item.dateIn}</td>
+                                  <td className="px-4 py-2">{item.finalResult}</td>
+                                  <td className="px-4 py-2">{item.status}</td>
+                              </tr>
+                          ))}
+                      </tbody>
+                  </table>
+              </div>
           </div>
       </div>
   );
