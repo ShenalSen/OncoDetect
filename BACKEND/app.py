@@ -565,6 +565,9 @@ def patient_data():
     diagnosis = data.get('diagnosis', 'Pending')
     notes = data.get('notes', '')
 
+    #  (Optional) Perform any analysis or generate results
+    #  This is where you'd integrate your detection logic. For now, we assume
+    #  you already have a 'diagnosis' field in the request.
 
     # Generate a PDF report
     pdf = FPDF()
