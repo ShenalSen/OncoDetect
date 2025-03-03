@@ -17,51 +17,45 @@ const data = [
 
 const PredictionTable = () => {
   return (
-    <div className="w-full">
-      
-      
-      <div className="flex items-center justify-between bg-white px-6 py-4 shadow-md">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <div>
-          <input
-            type="text"
-            placeholder="Search Past Predictions"
-            className="border border-gray-300 rounded-md px-3 py-1"
-          />
-        </div>
-      </div>
+    <div className="p-6 w-full">
+      {/* Main heading (outside the box) */}
+      <h2 className="text-2xl font-bold mb-4 text-left">Past Predictions</h2>
 
-      {/* MAIN CONTENT: Past Predictions header + table */}
-      <div className="p-6">
-        {/* Header row with "Past Predictions" title and date */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Past Predictions</h2>
-          <span className="text-gray-500">Today, Nov 05, 2024</span>
+      {/* Light gray/ash box wrapping everything else */}
+      <div className="bg-gray-50 border border-gray-200 shadow-sm rounded-md p-6">
+        {/* Patient Data header + date inside the box */}
+        <div className="relative mb-4">
+          <h3 className="text-md font-semibold text-left">Patient Data</h3>
+          <span className="absolute top-0 right-0 text-gray-500 text-sm">
+            Nov 05, 2025
+          </span>
         </div>
 
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <div className="overflow-x-auto">
-            <table className="min-w-full table-auto text-sm text-left text-gray-600">
-              <thead className="bg-gray-100 text-xs uppercase text-gray-700">
-                <tr>
-                  <th scope="col" className="px-4 py-3">Patient Name</th>
-                  <th scope="col" className="px-4 py-3">Date In</th>
-                  <th scope="col" className="px-4 py-3">Final Result</th>
-                  <th scope="col" className="px-4 py-3">Prediction Status</th>
+        {/* Table container */}
+        <div className="overflow-x-auto">
+          <table className="table-auto min-w-full text-sm text-gray-600 text-left">
+            <thead className="bg-gray-100 text-xs uppercase text-gray-700">
+              <tr>
+                <th scope="col" className="px-4 py-3">Patient Name</th>
+                <th scope="col" className="px-4 py-3">Date In</th>
+                <th scope="col" className="px-4 py-3">Final Result</th>
+                <th scope="col" className="px-4 py-3">Prediction Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr
+                  key={index}
+                  className="border-b last:border-0 hover:bg-gray-50"
+                >
+                  <td className="px-4 py-2">{item.name}</td>
+                  <td className="px-4 py-2">{item.dateIn}</td>
+                  <td className="px-4 py-2">{item.finalResult}</td>
+                  <td className="px-4 py-2">{item.predictionStatus}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {data.map((item, index) => (
-                  <tr key={index} className="border-b last:border-0 hover:bg-gray-50">
-                    <td className="px-4 py-2">{item.name}</td>
-                    <td className="px-4 py-2">{item.dateIn}</td>
-                    <td className="px-4 py-2">{item.finalResult}</td>
-                    <td className="px-4 py-2">{item.predictionStatus}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
