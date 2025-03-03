@@ -17,14 +17,8 @@ const data = [
 
 const PastPredictions = () => {
   return (
-    // Let this container stretch to full width and height
-    <div className="w-full min-h-screen p-4">
-      {/* 
-        - Use max-w-none to remove any max width limit.
-        - w-full ensures it takes the full width of its parent.
-        - p-8 for some padding.
-      */}
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-none mx-auto">
+    <div className="p-4"> {/* A bit of padding around the table */}
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-none">
         <h2 className="text-lg font-semibold text-center mb-4">Past Predictions</h2>
         
         <div className="bg-gray-100 p-4 shadow-inner rounded-lg">
@@ -33,9 +27,9 @@ const PastPredictions = () => {
             <table className="table-auto w-full text-sm text-center text-gray-600">
               <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                 <tr>
-                  <th scope="col" className="px-4 py-2">Date In</th>
-                  <th scope="col" className="px-4 py-2">Final Result</th>
-                  <th scope="col" className="px-4 py-2">Prediction Status</th>
+                  <th className="px-4 py-2">Date In</th>
+                  <th className="px-4 py-2">Final Result</th>
+                  <th className="px-4 py-2">Prediction Status</th>
                 </tr>
               </thead>
               <tbody>
