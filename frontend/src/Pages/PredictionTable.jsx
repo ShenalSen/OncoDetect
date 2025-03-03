@@ -14,12 +14,20 @@ const data = [
   { name: "Tashia Alexander", dateIn: "Jan 04, 2025", finalResult: "Incoming", predictionStatus: "Completed" },
   { name: "Sanduni Nihara", dateIn: "Jan 06, 2025", finalResult: "Incoming", predictionStatus: "Completed" }
 ];
+
 const PastPredictions = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-6xl w-full">
+    // Let this container stretch to full width and height
+    <div className="w-full min-h-screen p-4">
+      {/* 
+        - Use max-w-none to remove any max width limit.
+        - w-full ensures it takes the full width of its parent.
+        - p-8 for some padding.
+      */}
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-none mx-auto">
         <h2 className="text-lg font-semibold text-center mb-4">Past Predictions</h2>
-        <div className="bg-gray-100 p-4 shadow-inner rounded-lg"> 
+        
+        <div className="bg-gray-100 p-4 shadow-inner rounded-lg">
           <h3 className="text-md font-semibold text-center mb-2">Patient Data</h3>
           <div className="overflow-x-auto">
             <table className="table-auto w-full text-sm text-center text-gray-600">
