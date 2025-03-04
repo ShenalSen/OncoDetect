@@ -1,0 +1,86 @@
+#root {
+<<<<<<< HEAD
+  max-width: 100%; /* Change from 1280px to 100% */
+  margin: 0;       /* Remove auto margins */
+  padding: 0;      /* Remove padding */
+  text-align: left; /* Optional: change text alignment if needed */
+}
+=======
+  /* If you want less global padding, reduce or remove this. */
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  width: 100%; 
+  max-width: 960px; 
+  margin: auto; 
+  padding: 2em; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.bg-white {
+  background-color: #fff;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.bg-gray-100 {
+  background-color: #f7f7f7;
+  shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.05);
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.table-auto {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+>>>>>>> c5695bf41ca23c36861f54371ddd6bcf3859b066
