@@ -10,7 +10,7 @@ from datetime import datetime
 from sqlalchemy import DateTime
 
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 # Secret Key for session management
@@ -546,5 +546,5 @@ def get_diagnostic_results_for_patient(patient_id):
     return jsonify(output), 200
 
 
-if _name_ == "_main_":
-    app.run(debug=True, host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0', port=5000)
