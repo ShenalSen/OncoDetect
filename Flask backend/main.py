@@ -86,6 +86,23 @@ class DoctorProof(db.Model):
     proof_file = db.Column(db.String(256), nullable=False)
     upload_date = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+#Model definition for prediction results
+class DiagnosticResult(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.String(100), nullable=False)
+    appointment_id = db.Column(db.String(100), nullable=True)
+    annotated_image = db.Column(db.String(256), nullable=True)
+
+    total_percentage = db.Column(db.Float, nullable=True)
+    normal_percentage = db.Column(db.Float, nullable=True)
+    abnormal_percentage = db.Column(db.Float, nullable=True)
+    ambiguous_percentage = db.Column(db.Float, nullable=True)
+
+    date_of_scan = db.Column(db.DateTime, default=db.func.current_timestamp())
+    doctor_recommendation = db.Column(db.String(512), nullable=True)
+    additional_insights = db.Column(db.String(512), nullable=True)
+    final_result = db.Column(db.String(512), nullable=True)
+
 
 with app.app_context():
     db.create_all()
@@ -441,28 +458,6 @@ def delete_doctor_proof(doctor_id):
 
     return jsonify({'message': 'Doctor proof deleted successfully'}), 200
 
-
-
-
-#Model definition for prediction results
-class DiagnosticResult(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.String(100), nullable=False)
-    appointment_id = db.Column(db.String(100), nullable=True)
-    annotated_image = db.Column(db.String(256), nullable=True)
-
-    total_percentage = db.Column(db.Float, nullable=True)
-    normal_percentage = db.Column(db.Float, nullable=True)
-    abnormal_percentage = db.Column(db.Float, nullable=True)
-    ambiguous_percentage = db.Column(db.Float, nullable=True)
-
-    date_of_scan = db.Column(db.DateTime, default=db.func.current_timestamp())
-    doctor_recommendation = db.Column(db.String(512), nullable=True)
-    additional_insights = db.Column(db.String(512), nullable=True)
-    final_result = db.Column(db.String(512), nullable=True)
-
-with app.app_context():
-    db.create_all()
 
 
 
