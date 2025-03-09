@@ -353,6 +353,18 @@ def create_appointment():
 
     return jsonify({'message': 'Appointment created successfully'}), 201
 
+#cancel apointment
+@app.route('/appointment/<int:id>', methods=['DELETE'])
+def delete_appointment(id):
+    appointment = Appointment.query.get(id)
+    if not appointment:
+        return jsonify({'message': 'Appointment not found'}), 404
+
+    db.session.delete(appointment)
+    db.session.commit()
+
+    return jsonify({'message': 'Appointment deleted successfully'}), 200
+
 
 # Create a notification
 @app.route('/notification',methods=['POST'])
