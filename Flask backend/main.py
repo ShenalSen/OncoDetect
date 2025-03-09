@@ -266,30 +266,22 @@ def delete_patient(id):
 
 
 #Create a new appointment
-@app.route('/appointment', methods=['POST'])
+@app.route('/appointments', methods=['POST'])
 def create_appointment():
     data = request.get_json()
-    
-    
-    try:
-        # Convert the 'appointment_date' string into a datetime object
-        appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S') 
-    except ValueError:
-        return jsonify({"error": "Invalid date format. Please use 'YYYY-MM-DD HH:MM:SS' format."}), 400
 
-    patient_id = data.get('patient_id')
     doctor_id = data.get('doctor_id')
+    patient_id = data.get('patient_id')
+    appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S')
     description = data.get('description')
 
-   
     new_appointment = Appointment(
-        patient_id=patient_id,
         doctor_id=doctor_id,
+        patient_id=patient_id,
         appointment_date=appointment_date,
         description=description
     )
 
-  
     db.session.add(new_appointment)
     db.session.commit()
 
@@ -297,64 +289,37 @@ def create_appointment():
 
 
 
-#Get all appointments
-@app.route('/appointments', methods=['GET'])
-def get_appointments():
-    
-    appointments = Appointment.query.all()
+#Get  appointments by doctor id
+@app.route('/appointments/<int:doctor_id>', methods=['GET'])
+def get_appointments(doctor_id):
+    appointments = Appointment.query.filter_by(doctor_id=doctor_id).all()
     return jsonify([{
+        'appointment_id': appointment.id,
         'patient_id': appointment.patient_id,
-        'doctor_id': appointment.doctor_id,
         'appointment_date': appointment.appointment_date,
         'description': appointment.description
     } for appointment in appointments]), 200
 
 
-
-#Get appointments by id
-@app.route('/appointment/<string:patient_id>', methods=['GET'])
-def get_appointment(patient_id):
-    appointment = Appointment.query.filter_by(patient_id=patient_id).first()
+#update an appointment
+@app.route('/appointments/<int:id>', methods=['PUT'])
+def update_appointment(id):
+    appointment = Appointment.query.get(id)
     if not appointment:
         return jsonify({'message': 'Appointment not found'}), 404
-    
-    # Format the appointment_date as a string in the desired format
-    appointment_date_str = appointment.appointment_date.strftime('%Y-%m-%d %H:%M:%S')
-    
-    return jsonify({
-        'patient_id': appointment.patient_id,
-        'doctor_id': appointment.doctor_id,
-        'appointment_date': appointment_date_str,
-        'description': appointment.description
-    }), 200
 
-#create appointment
-def create_appointment():
     data = request.get_json()
-    
-    try:
-        appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S')
-    except ValueError:
-        return jsonify({"error": "Invalid date format. Please use 'YYYY-MM-DD HH:MM:SS' format."}), 400
-
-    patient_id = data.get('patient_id')
-    doctor_id = data.get('doctor_id')
-    description = data.get('description')
-
-    new_appointment = Appointment(
-        patient_id=patient_id,
-        doctor_id=doctor_id,
-        appointment_date=appointment_date,
-        description=description
-    )
-
-    db.session.add(new_appointment)
+    appointment.patient_id = data.get('patient_id', appointment.patient_id)
+    appointment.doctor_id = data.get('doctor_id', appointment.doctor_id)
+    appointment.appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S')
+    appointment.description = data.get('description', appointment.description)
     db.session.commit()
 
-    return jsonify({'message': 'Appointment created successfully'}), 201
+    return jsonify({'message': 'Appointment updated successfully'}), 200
+
 
 #cancel apointment
-@app.route('/appointment/<int:id>', methods=['DELETE'])
+@app.route('/appointments/<int:id>', methods=['DELETE'])
 def delete_appointment(id):
     appointment = Appointment.query.get(id)
     if not appointment:
