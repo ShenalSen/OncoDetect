@@ -328,6 +328,30 @@ def get_appointment(patient_id):
         'description': appointment.description
     }), 200
 
+#create appointment
+def create_appointment():
+    data = request.get_json()
+    
+    try:
+        appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        return jsonify({"error": "Invalid date format. Please use 'YYYY-MM-DD HH:MM:SS' format."}), 400
+
+    patient_id = data.get('patient_id')
+    doctor_id = data.get('doctor_id')
+    description = data.get('description')
+
+    new_appointment = Appointment(
+        patient_id=patient_id,
+        doctor_id=doctor_id,
+        appointment_date=appointment_date,
+        description=description
+    )
+
+    db.session.add(new_appointment)
+    db.session.commit()
+
+    return jsonify({'message': 'Appointment created successfully'}), 201
 
 
 # Create a notification
