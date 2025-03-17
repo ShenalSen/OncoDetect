@@ -6,6 +6,9 @@ from pymongo import MongoClient
 import os
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from .utils import allowed_file, generate_pdf_report
+from flask import make_response
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
@@ -385,6 +388,25 @@ def get_all_patient_data():
         return jsonify(patient_data_list), 200
     else:
         return jsonify({'message': 'No patient data found'}), 404
+
+#Get patient report    
+@app.route('/patient_report', methods=['POST'])
+def patient_data():
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "No patient data provided"}), 400
+    patient_name = data.get('name', 'Unknown')
+    patient_id = data.get('patient_id', 'N/A')
+    diagnosis = data.get('diagnosis', 'Pending')
+    notes = data.get('notes', '')
+
+    pdf = generate_pdf_report(patient_name, patient_id, diagnosis, notes)
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    response = make_response(pdf_bytes)
+    response.headers.set('Content-Type', 'application/pdf')
+    response.headers.set('Content-Disposition', 'attachment', filename='BreastCancerReport.pdf')
+    return response
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
