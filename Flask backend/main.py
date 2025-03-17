@@ -25,6 +25,7 @@ appointments = db.appointments
 notifications = db.notifications
 doctor_profs = db.doctor_profs
 diagnostic_results = db.diagnostic_results
+patient_data = db.patient_data
 
 # Initialize extensions
 bcrypt = Bcrypt(app)
@@ -356,6 +357,34 @@ def get_diagnostic_results_for_patient(patient_id):
         return jsonify(results), 200
     else:
         return jsonify({'message': 'No diagnostic results found for this patient'}), 404
+
+# Add patient data
+@app.route('/patient_data', methods=['POST'])
+def add_patient_data():
+    data = request.get_json()
+    name = data.get('name')
+    date_in = data.get('date_in')
+    final_result = data.get('final_result')
+    prediction_status = data.get('prediction_status')
+
+    patient_data_entry = {
+        'name': name,
+        'date_in': date_in,
+        'final_result': final_result,
+        'prediction_status': prediction_status
+    }
+    patient_data.insert_one(patient_data_entry)
+
+    return jsonify({'message': 'Patient data added successfully'}), 201
+
+# Get all patient data
+@app.route('/patient_data', methods=['GET'])
+def get_all_patient_data():
+    patient_data_list = list(patient_data.find({}, {'_id': 0}))
+    if patient_data_list:
+        return jsonify(patient_data_list), 200
+    else:
+        return jsonify({'message': 'No patient data found'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
