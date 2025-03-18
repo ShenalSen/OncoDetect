@@ -2,13 +2,32 @@ import os
 from werkzeug.utils import secure_filename
 from config import Config
 from fpdf import FPDF
+from flask import current_app
 
 def allowed_file(filename, allowed_extensions=None):
+    """
+    Utility function to check if the uploaded file has an allowed extension
+    """
     if allowed_extensions is None:
         allowed_extensions = Config.ALLOWED_EXTENSIONS
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
+def save_file(file):
+    """
+    Save an uploaded file to the configured upload folder
+    Returns the file path
+    """
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(Config.UPLOAD_FOLDER, filename)
+        file.save(file_path)
+        return file_path
+    return None
+
 def generate_pdf_report(patient_name, patient_id, diagnosis, notes):
+    """
+    Generate a PDF report for a patient's breast cancer detection results
+    """
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)

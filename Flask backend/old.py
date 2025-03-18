@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt
-from flask_login import LoginManager, UserMixin
-from werkzeug.utils import secure_filename
 from flask_cors import CORS
+from pymongo import MongoClient
 import os
 from datetime import datetime
-from sqlalchemy import DateTime
+from werkzeug.utils import secure_filename
+from flask import make_response
+
 
 
 app = Flask(__name__)
@@ -16,25 +16,28 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_cred
 # Secret Key for session management
 app.secret_key = os.urandom(24)
 
-# Database setup
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'supersecretkey'
+# MongoDB configuration
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/'  
+mongo = MongoClient(app.config['MONGO_URI'])
+db = mongo['OncoDetect']  
 
-# JWT Blacklist Configuration
-app.config["JWT_BLACKLIST_ENABLED"] = True
-app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access"]
+# Collections
+users = db.users
+patients = db.patients
+appointments = db.appointments
+notifications = db.notifications
+doctor_profs = db.doctor_profs
+diagnostic_results = db.diagnostic_results
+patient_data = db.patient_data
+
+# Initialize extensions
+bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
 
 # Upload setup
 app.config['UPLOAD_FOLDER'] = 'upload_files'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'dcm', 'tif'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Limit to 16 MB
-
-# Initialize extensions
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-jwt = JWTManager(app)
-login_manager = LoginManager(app)
 
 # Ensure the upload directory exists
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -49,72 +52,9 @@ def check_if_token_revoked(jwt_header, jwt_payload):
     jti = jwt_payload["jti"]
     return jti in blacklist
 
-#Models
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(256), nullable=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    google_id = db.Column(db.String(256), unique=True, nullable=True)
-
-class Patient(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.String(100), unique=True, nullable=False)
-    name = db.Column(db.String(120), nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    contact_number = db.Column(db.String(20), nullable=False)
-    appointment_id = db.Column(db.String(100), nullable=False)
-    scan_file = db.Column(db.String(256), nullable=True)
-
-class Appointment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.String(100), nullable=False)
-    doctor_id = db.Column(db.String(100), nullable=False)
-    appointment_date = db.Column(db.DateTime, nullable=False)
-    description = db.Column(db.String(500), nullable=True)
-
-class Notification(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    message = db.Column(db.String(500), nullable=False)
-    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
-
-
-class Doctorprof(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    doctor_id = db.Column(db.String(100), nullable=False)
-    prof_file = db.Column(db.String(256), nullable=False)
-    upload_date = db.Column(db.DateTime, default=db.func.current_timestamp())
-
-#Model definition for prediction results
-class DiagnosticResult(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.String(100), nullable=False)
-    appointment_id = db.Column(db.String(100), nullable=True)
-    annotated_image = db.Column(db.String(256), nullable=True)
-
-    total_percentage = db.Column(db.Float, nullable=True)
-    normal_percentage = db.Column(db.Float, nullable=True)
-    abnormal_percentage = db.Column(db.Float, nullable=True)
-    ambiguous_percentage = db.Column(db.Float, nullable=True)
-
-    date_of_scan = db.Column(db.DateTime, default=db.func.current_timestamp())
-    doctor_recommendation = db.Column(db.String(512), nullable=True)
-    additional_insights = db.Column(db.String(512), nullable=True)
-    final_result = db.Column(db.String(512), nullable=True)
-
-
-with app.app_context():
-    db.create_all()
-
 # Utility function for file validation
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-# User Loader for Login Manager
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 # User Login
 @app.route('/login', methods=['POST'])
@@ -123,14 +63,14 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    user = User.query.filter_by(email=email).first()
+    user = users.find_one({'email': email})
 
-    if user and bcrypt.check_password_hash(user.password, password):
-        access_token = create_access_token(identity=user.id)
+    if user and bcrypt.check_password_hash(user['password'], password):
+        access_token = create_access_token(identity=str(user['_id']))
         return jsonify({'message': 'Login successful', 'token': access_token}), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
-    
+
 # Root route to check if the backend is working
 @app.route('/', methods=['GET'])
 def home():
@@ -144,13 +84,16 @@ def register():
     username = data.get('username')
     password = data.get('password')
 
-    if User.query.filter_by(email=email).first():
+    if users.find_one({'email': email}):
         return jsonify({'message': 'User already exists'}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    new_user = User(email=email, username=username, password=hashed_password)
-    db.session.add(new_user)
-    db.session.commit()
+    user = {
+        'email': email,
+        'username': username,
+        'password': hashed_password
+    }
+    users.insert_one(user)
 
     return jsonify({'message': 'User registered successfully'}), 201
 
@@ -162,7 +105,7 @@ def logout():
     blacklist.add(jti)
     return jsonify({"message": "Successfully logged out"}), 200
 
-# Add patient 
+# Add patient
 @app.route('/patient', methods=['POST'])
 def add_patient():
     data = request.form
@@ -184,191 +127,119 @@ def add_patient():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
-        # Create a new patient
-        new_patient = Patient(
-            patient_id=patient_id,
-            name=name,
-            age=age,
-            contact_number=contact_number,
-            appointment_id=appointment_id,
-            scan_file=file_path
-        )
-        db.session.add(new_patient) 
-        db.session.commit()
+        patient = {
+            'patient_id': patient_id,
+            'name': name,
+            'age': age,
+            'contact_number': contact_number,
+            'appointment_id': appointment_id,
+            'scan_file': file_path
+        }
+        patients.insert_one(patient)
 
         return jsonify({'message': 'Patient added successfully'}), 201
     else:
         return jsonify({'message': 'Invalid file type'}), 400
-    
 
-#Get all patients details
-@app.route('/patients',methods=['GET'])
+# Get all patients
+@app.route('/patients', methods=['GET'])
 def get_patients():
-    patients=Patient.query.all()
-    if patients:
-        return jsonify([{
-            'patient_id': patient.patient_id,
-            'name': patient.name,
-            'age': patient.age,
-            'contact_number': patient.contact_number,
-            'appointment_id': patient.appointment_id,
-            'scan_file': patient.scan_file
-
-        }for patient in patients]),200
+    patients_list = list(patients.find({}, {'_id': 0}))
+    if patients_list:
+        return jsonify(patients_list), 200
     else:
         return jsonify({'message': 'No patients found'}), 404
-    
 
-
-#Get patient details by ID
-@app.route('/patient/<int:id>', methods=['GET'])
-def get_patient(id):
-    patient = Patient.query.filter_by(patient_id=id).first() 
+# Get patient details by ID
+@app.route('/patient/<string:patient_id>', methods=['GET'])
+def get_patient(patient_id):
+    patient = patients.find_one({'patient_id': patient_id}, {'_id': 0})
     if patient:
-        return jsonify({
-            'patient_id': patient.patient_id,
-            'name': patient.name,
-            'age': patient.age,
-            'contact_number': patient.contact_number,
-            'appointment_id': patient.appointment_id,
-            'scan_file': patient.scan_file
-        }), 200
+        return jsonify(patient), 200
     else:
         return jsonify({'message': 'Patient not found'}), 404
-    
 
-
-
-#Update patient details
-@app.route('/patient/<int:id>', methods=['PUT'])
-def update_patient(id):
-    patient = Patient.query.get(id)
-    if not patient:
-        return jsonify({'message': 'Patient not found'}), 404
-    
+# Update patient details
+@app.route('/patient/<string:patient_id>', methods=['PUT'])
+def update_patient(patient_id):
     data = request.get_json()
-    patient.name = data.get('name', patient.name)
-    db.session.commit()
-    return jsonify({'message': 'Patient updated successfully'}), 200
+    result = patients.update_one({'patient_id': patient_id}, {'$set': data})
+    if result.modified_count > 0:
+        return jsonify({'message': 'Patient updated successfully'}), 200
+    else:
+        return jsonify({'message': 'Patient not found'}), 404
 
-@app.route('/patient/<int:id>',methods=['DELETE'])
-def delete_patient(id):
-    patient=Patient.query.get(id)
-    if not patient:
-        return jsonify({'massage': 'Patient not found'}),404
-    
-    db.session.delete(patient)
-    db.session.flush()
-    db.session.commit()
-    print("Patient deleted and changes committed to the database.")
-    return jsonify({'message': 'Patient deleted successfully'}),200
+# Delete patient
+@app.route('/patient/<string:patient_id>', methods=['DELETE'])
+def delete_patient(patient_id):
+    result = patients.delete_one({'patient_id': patient_id})
+    if result.deleted_count > 0:
+        return jsonify({'message': 'Patient deleted successfully'}), 200
+    else:
+        return jsonify({'message': 'Patient not found'}), 404
 
-
-
-#Create a new appointment
+# Create a new appointment
 @app.route('/appointment', methods=['POST'])
 def create_appointment():
     data = request.get_json()
     
-    
     try:
-        # Convert the 'appointment_date' string into a datetime object
         appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d %H:%M:%S') 
     except ValueError:
         return jsonify({"error": "Invalid date format. Please use 'YYYY-MM-DD HH:MM:SS' format."}), 400
 
-    patient_id = data.get('patient_id')
-    doctor_id = data.get('doctor_id')
-    description = data.get('description')
-
-   
-    new_appointment = Appointment(
-        patient_id=patient_id,
-        doctor_id=doctor_id,
-        appointment_date=appointment_date,
-        description=description
-    )
-
-  
-    db.session.add(new_appointment)
-    db.session.commit()
+    appointment = {
+        'patient_id': data.get('patient_id'),
+        'doctor_id': data.get('doctor_id'),
+        'appointment_date': appointment_date,
+        'description': data.get('description')
+    }
+    appointments.insert_one(appointment)
 
     return jsonify({'message': 'Appointment created successfully'}), 201
 
-
-
-#Get all appointments
+# Get all appointments
 @app.route('/appointments', methods=['GET'])
 def get_appointments():
-    
-    appointments = Appointment.query.all()
-    return jsonify([{
-        'patient_id': appointment.patient_id,
-        'doctor_id': appointment.doctor_id,
-        'appointment_date': appointment.appointment_date,
-        'description': appointment.description
-    } for appointment in appointments]), 200
+    appointments_list = list(appointments.find({}, {'_id': 0}))
+    return jsonify(appointments_list), 200
 
-
-
-#Get appointments by id
+# Get appointments by patient ID
 @app.route('/appointment/<string:patient_id>', methods=['GET'])
 def get_appointment(patient_id):
-    appointment = Appointment.query.filter_by(patient_id=patient_id).first()
-    if not appointment:
+    appointment = appointments.find_one({'patient_id': patient_id}, {'_id': 0})
+    if appointment:
+        return jsonify(appointment), 200
+    else:
         return jsonify({'message': 'Appointment not found'}), 404
-    
-    # Format the appointment_date as a string in the desired format
-    appointment_date_str = appointment.appointment_date.strftime('%Y-%m-%d %H:%M:%S')
-    
-    return jsonify({
-        'patient_id': appointment.patient_id,
-        'doctor_id': appointment.doctor_id,
-        'appointment_date': appointment_date_str,
-        'description': appointment.description
-    }), 200
-
-
 
 # Create a notification
-@app.route('/notification',methods=['POST'])
+@app.route('/notification', methods=['POST'])
 def create_notification():
-    data=request.get_json()
-    user_id=data.get('user_id')
-    message=data.get('message')
+    data = request.get_json()
+    user_id = data.get('user_id')
+    message = data.get('message')
 
-    new_notification=Notification(
-        user_id=user_id,
-        message=message
-    )
-
-    db.session.add(new_notification)
-    db.session.commit()
+    notification = {
+        'user_id': user_id,
+        'message': message,
+        'timestamp': datetime.now()
+    }
+    notifications.insert_one(notification)
 
     return jsonify({'message': 'Notification created successfully'}), 201
-
-
-
 
 # Get all notifications
 @app.route('/notifications', methods=['GET'])
 def get_notifications():
-    notifications = Notification.query.all()
-    return jsonify([{
-        'user_id': notification.user_id,
-        'message': notification.message,
-        'timestamp': notification.timestamp
-    } for notification in notifications]), 200
+    notifications_list = list(notifications.find({}, {'_id': 0}))
+    return jsonify(notifications_list), 200
 
-
-
-
-# Add Doctor prof
+# Add Doctor profile
 @app.route('/doctorprof', methods=['POST'])
 def add_doctor_prof():
     data = request.form
     doctor_id = data.get('doctor_id')
-    
 
     if 'prof_file' not in request.files:
         return jsonify({'message': 'No file part in the request'}), 400
@@ -382,48 +253,29 @@ def add_doctor_prof():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
+        doctor_prof = {
+            'doctor_id': doctor_id,
+            'prof_file': file_path,
+            'upload_date': datetime.now()
+        }
+        doctor_profs.insert_one(doctor_prof)
 
-
-
-        # Create a new doctor prof record
-        new_doctor_prof = Doctorprof(
-            doctor_id=doctor_id,
-            prof_file=file_path,
-            
-        )
-        db.session.add(new_doctor_prof)
-        db.session.commit()
-
-        return jsonify({'message': 'Doctor prof uploaded successfully'}), 201
+        return jsonify({'message': 'Doctor profile uploaded successfully'}), 201
     else:
         return jsonify({'message': 'Invalid file type'}), 400
 
-
-
-
-# Get Doctor prof by Doctor ID
+# Get Doctor profile by Doctor ID
 @app.route('/doctorprof/<string:doctor_id>', methods=['GET'])
 def get_doctor_prof(doctor_id):
-    doctor_prof = Doctorprof.query.filter_by(doctor_id=doctor_id).first()
+    doctor_prof = doctor_profs.find_one({'doctor_id': doctor_id}, {'_id': 0})
     if doctor_prof:
-        return jsonify({
-            'doctor_id': doctor_prof.doctor_id,
-            'prof_file': doctor_prof.prof_file,
-            'upload_date': doctor_prof.upload_date
-        }), 200
+        return jsonify(doctor_prof), 200
     else:
-        return jsonify({'message': 'Doctor prof not found'}), 404
+        return jsonify({'message': 'Doctor profile not found'}), 404
 
-
-
-
-# Update Doctor prof by Doctor ID
+# Update Doctor profile by Doctor ID
 @app.route('/doctorprof/<string:doctor_id>', methods=['PUT'])
 def update_doctor_prof(doctor_id):
-    doctor_prof = Doctorprof.query.filter_by(doctor_id=doctor_id).first()
-    if not doctor_prof:
-        return jsonify({'message': 'Doctor prof not found'}), 404
-
     if 'prof_file' in request.files:
         file = request.files['prof_file']
         if file.filename == '':
@@ -433,35 +285,26 @@ def update_doctor_prof(doctor_id):
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
 
-            # Update the prof file path
-            doctor_prof.prof_file = file_path
-            db.session.commit()
-
-            return jsonify({'message': 'Doctor prof updated successfully'}), 200
+            result = doctor_profs.update_one({'doctor_id': doctor_id}, {'$set': {'prof_file': file_path}})
+            if result.modified_count > 0:
+                return jsonify({'message': 'Doctor profile updated successfully'}), 200
+            else:
+                return jsonify({'message': 'Doctor profile not found'}), 404
         else:
             return jsonify({'message': 'Invalid file type'}), 400
     else:
-        return jsonify({'message': 'No prof file provided'}), 400
+        return jsonify({'message': 'No profile file provided'}), 400
 
-
-
-
-# Delete Doctor prof by Doctor ID
+# Delete Doctor profile by Doctor ID
 @app.route('/doctorprof/<string:doctor_id>', methods=['DELETE'])
 def delete_doctor_prof(doctor_id):
-    doctor_prof = Doctorprof.query.filter_by(doctor_id=doctor_id).first()
-    if not doctor_prof:
-        return jsonify({'message': 'Doctor prof not found'}), 404
+    result = doctor_profs.delete_one({'doctor_id': doctor_id})
+    if result.deleted_count > 0:
+        return jsonify({'message': 'Doctor profile deleted successfully'}), 200
+    else:
+        return jsonify({'message': 'Doctor profile not found'}), 404
 
-    db.session.delete(doctor_prof)
-    db.session.commit()
-
-    return jsonify({'message': 'Doctor prof deleted successfully'}), 200
-
-
-
-
-#Creating diagnostic results
+# Create diagnostic result
 @app.route('/diagnostic_result', methods=['POST'])
 def create_diagnostic_result():
     data = request.form
@@ -476,9 +319,6 @@ def create_diagnostic_result():
     additional_insights = data.get('additional_insights')
     final_result = data.get('final_result')
 
-
-
-  # Convert to floats
     try:
         total_percentage = float(total_percentage) if total_percentage else None
         normal_percentage = float(normal_percentage) if normal_percentage else None
@@ -495,51 +335,78 @@ def create_diagnostic_result():
         annotated_image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         annotated_image_file.save(annotated_image_path)
 
-    new_result = DiagnosticResult(
-        patient_id=patient_id,
-        appointment_id=appointment_id,
-        annotated_image=annotated_image_path,
-        total_percentage=total_percentage,
-        normal_percentage=normal_percentage,
-        abnormal_percentage=abnormal_percentage,
-        ambiguous_percentage=ambiguous_percentage,
-        doctor_recommendation=doctor_recommendation,
-        additional_insights=additional_insights,
-        final_result=final_result
-    )
-    db.session.add(new_result)
-    db.session.commit()
+    diagnostic_result = {
+        'patient_id': patient_id,
+        'appointment_id': appointment_id,
+        'annotated_image': annotated_image_path,
+        'total_percentage': total_percentage,
+        'normal_percentage': normal_percentage,
+        'abnormal_percentage': abnormal_percentage,
+        'ambiguous_percentage': ambiguous_percentage,
+        'doctor_recommendation': doctor_recommendation,
+        'additional_insights': additional_insights,
+        'final_result': final_result,
+        'date_of_scan': datetime.now()
+    }
+    diagnostic_results.insert_one(diagnostic_result)
 
     return jsonify({'message': 'Diagnostic result created successfully'}), 201
 
-
-
-# getting diagnostic results for patients
+# Get diagnostic results for a patient
 @app.route('/diagnostic_result/patient/<string:patient_id>', methods=['GET'])
 def get_diagnostic_results_for_patient(patient_id):
-    results = DiagnosticResult.query.filter_by(patient_id=patient_id).all()
-    if not results:
+    results = list(diagnostic_results.find({'patient_id': patient_id}, {'_id': 0}))
+    if results:
+        return jsonify(results), 200
+    else:
         return jsonify({'message': 'No diagnostic results found for this patient'}), 404
 
-    output = []
-    for r in results:
-        output.append({
-            'id': r.id,
-            'patient_id': r.patient_id,
-            'appointment_id': r.appointment_id,
-            'annotated_image': r.annotated_image,
-            'total_percentage': r.total_percentage,
-            'normal_percentage': r.normal_percentage,
-            'abnormal_percentage': r.abnormal_percentage,
-            'ambiguous_percentage': r.ambiguous_percentage,
-            'doctor_recommendation': r.doctor_recommendation,
-            'additional_insights': r.additional_insights,
-            'final_result': r.final_result,
-            'date_of_scan': r.date_of_scan.strftime('%Y-%m-%d %H:%M:%S') if r.date_of_scan else None
-        })
+# Add patient data
+@app.route('/patient_data', methods=['POST'])
+def add_patient_data():
+    data = request.get_json()
+    name = data.get('name')
+    date_in = data.get('date_in')
+    final_result = data.get('final_result')
+    prediction_status = data.get('prediction_status')
 
-    return jsonify(output), 200
+    patient_data_entry = {
+        'name': name,
+        'date_in': date_in,
+        'final_result': final_result,
+        'prediction_status': prediction_status
+    }
+    patient_data.insert_one(patient_data_entry)
+
+    return jsonify({'message': 'Patient data added successfully'}), 201
+
+# Get all patient data
+@app.route('/patient_data', methods=['GET'])
+def get_all_patient_data():
+    patient_data_list = list(patient_data.find({}, {'_id': 0}))
+    if patient_data_list:
+        return jsonify(patient_data_list), 200
+    else:
+        return jsonify({'message': 'No patient data found'}), 404
+
+#Get patient report    
+#@app.route('/patient_report', methods=['POST'])
+#def patient_data():
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "No patient data provided"}), 400
+    patient_name = data.get('name', 'Unknown')
+    patient_id = data.get('patient_id', 'N/A')
+    diagnosis = data.get('diagnosis', 'Pending')
+    notes = data.get('notes', '')
+
+    pdf = generate_pdf_report(patient_name, patient_id, diagnosis, notes)
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    response = make_response(pdf_bytes)
+    response.headers.set('Content-Type', 'application/pdf')
+    response.headers.set('Content-Disposition', 'attachment', filename='BreastCancerReport.pdf')
+    return response
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
