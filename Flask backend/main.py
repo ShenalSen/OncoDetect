@@ -8,6 +8,7 @@ from routes.notification_routes import notification_bp
 from routes.doctor_routes import doctor_bp
 from routes.diagnostic_routes import diagnostic_bp
 from routes.patient_data_routes import patient_data_bp
+from routes.prediction_routes import prediction_bp
 import os
 
 app = Flask(__name__)
@@ -24,6 +25,7 @@ app.register_blueprint(notification_bp)
 app.register_blueprint(doctor_bp)
 app.register_blueprint(diagnostic_bp)
 app.register_blueprint(patient_data_bp)
+app.register_blueprint(prediction_bp)
 
 # Root route to check if the backend is working
 @app.route('/', methods=['GET'])

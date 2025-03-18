@@ -1,4 +1,4 @@
-# Mongo collections defined here for easy access throughout the application
+
 from flask import current_app
 
 def get_db():
