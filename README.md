@@ -35,8 +35,8 @@ OncoDetect aims to address these challenges by:
 
 ## Tech Stack
 - **Frontend**: ReactJS
-- **Backend**: Django (Python)
-- **AI/ML Frameworks**: TensorFlow or PyTorch
+- **Backend**: Flask (Python)
+- **AI/ML Frameworks**: TensorFlow, Open CV, Matplotlib, Pandas
 - **Containerization**: Docker
 - **Security**: JWT for API authentication, HTTPS for secure communication
 - **Dataset**: CBIS-DDSM (Curated Breast Imaging Subset of DDSM)
