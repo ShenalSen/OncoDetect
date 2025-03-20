@@ -1,4 +1,4 @@
-import React from "react";
+import LoginPage from "./Pages/Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PastPredictions from "./Pages/PastPredictions";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
@@ -8,6 +8,7 @@ import DiagnosticResults from "./Pages/DiagosticResults";
 import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
+import React, { useState } from "react";
 
 function DashBoard() {
   return (
@@ -32,34 +33,42 @@ function DashBoard() {
 }
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
     <Router>
-      {/* Sidebar & Header Wrapper */}
-      <div className="flex">
-        {/* Sidebar */}
-        <div className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg">
-          <Nav />
-        </div>
+      {isAuthenticated ? (
+        <div className="flex">
+          {/* Sidebar */}
+          <div className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg">
+            <Nav />
+          </div>
 
-        {/* Main Content Wrapper */}
-        <div className="flex-1 ml-64 bg-gray-100 min-h-screen">
-          {/* Fixed Header */}
-          <Header01 />
+          {/* Main Content Wrapper */}
+          <div className="flex-1 ml-64 bg-gray-100 min-h-screen">
+            {/* Fixed Header */}
+            <Header01 />
 
-          {/* Main Content (Pushed down to avoid overlap) */}
-          <div className="p-6 pt-10">
-            <Routes>
-              <Route path="/" element={<DashBoard />} />
-              <Route path="/past-predictions" element={<PastPredictions />} />
-              <Route path="/doctor" element={<Doctor />} />
-              <Route path="/reports" element={<DiagnosticResults />} />
-              <Route path="/settings" element={<SettingsPage />} />
-            </Routes>
+            {/* Main Content (Pushed down to avoid overlap) */}
+            <div className="p-6 pt-10">
+              <Routes>
+                <Route path="/" element={<DashBoard />} />
+                <Route path="/past-predictions" element={<PastPredictions />} />
+                <Route path="/doctor" element={<Doctor />} />
+                <Route path="/reports" element={<DiagnosticResults />} />
+                <Route path="/settings" element={<SettingsPage />} />
+              </Routes>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <LoginPage setIsAuthenticated={setIsAuthenticated} />
+        
+      )}
     </Router>
   );
 }
 
 export default App;
+
+

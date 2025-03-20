@@ -7,15 +7,7 @@ const Doctor = () => {
       {/* Outer wrapper with left margin for sidebar and a set width */}
       <div className="max-w-4xl ml-64 w-full">
         
-        {/* Top Bar (Dashboard + Search) */}
-        <div className="bg-white p-4 shadow-md rounded-lg mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">Dashboard</h2>
-          <input
-            type="text"
-            placeholder="Search Past Predictions"
-            className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+        
 
         {/* Main Doctor Profile Container */}
         <div className="bg-white border border-gray-300 shadow-md rounded-lg p-8">
