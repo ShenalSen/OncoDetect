@@ -96,6 +96,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-For more details, contact us at [team@oncodetect.com](mailto:team@oncodetect.com).
+For more details, contact us at [oncodetect.lk](https://www.oncodetect.lk/).
 
 EER - Commit. DD14519331
