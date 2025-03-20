@@ -11,7 +11,11 @@ const LoginPage = ({ setIsAuthenticated }) => {
     e.preventDefault();
     
     // Simple authentication check (You should replace this with real authentication logic)
+<<<<<<< HEAD
     if (email === "admin@example.com" && password === "1") {
+=======
+    if (email === "admin@example.com" && password === "password123") {
+>>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
       setIsAuthenticated(true); 
       navigate("/")
 
