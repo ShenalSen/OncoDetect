@@ -42,7 +42,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-md p-6 rounded-lg mt-6">
+    <div className="max-w-md mx-auto bg-white shadow-md p-6 rounded-lg mt-6 pb-10 pt-10" style={{ padding: "16px" }}>
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">💡 We Value Your Feedback</h2>
       <p className="text-center text-gray-600 mb-6">
         Please share your thoughts and suggestions to help us improve.
