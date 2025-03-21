@@ -15,6 +15,8 @@ import PrivacyPermissions from "./Pages/PrivacyPermissions";  // Ensure correct 
 import ApplicationSettings from "./Pages/ApplicationSettings"; // Import the new page
 import ContactSupport from "./Pages/ContactSupport"; // Import ContactSupport
 import FeedbackForm from "./Pages/FeedbackForm"; // Import FeedbackForm
+import AboutUs from "./Pages/AboutUs"; // Import AboutUs component
+import FAQPage from "./Pages/FAQPage"; // Import FAQPage
 
 function DashBoard() {
   return (
@@ -73,6 +75,8 @@ function App() {
                 <Route path="/application-settings" element={<ApplicationSettings />} /> {/* Add route */}
                 <Route path="/contact-support" element={<ContactSupport />} /> {/* Add route */}
                 <Route path="/feedback" element={<FeedbackForm />} /> {/* Add route */}
+                <Route path="/about-us" element={<AboutUs />} /> {/* Add route for About Us */}
+                <Route path="/help-faq" element={<FAQPage />} /> {/* Add route for FAQPage */}
               </Routes>
             </div>
           </div>
