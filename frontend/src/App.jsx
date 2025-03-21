@@ -14,6 +14,7 @@ import NotificationPreferences from "./Pages/NotificationPreferences";
 import PrivacyPermissions from "./Pages/PrivacyPermissions";  // Ensure correct import
 import ApplicationSettings from "./Pages/ApplicationSettings"; // Import the new page
 import ContactSupport from "./Pages/ContactSupport"; // Import ContactSupport
+import FeedbackForm from "./Pages/FeedbackForm"; // Import FeedbackForm
 
 function DashBoard() {
   return (
@@ -71,6 +72,7 @@ function App() {
                 <Route path="/privacy-permissions" element={<PrivacyPermissions />} />
                 <Route path="/application-settings" element={<ApplicationSettings />} /> {/* Add route */}
                 <Route path="/contact-support" element={<ContactSupport />} /> {/* Add route */}
+                <Route path="/feedback" element={<FeedbackForm />} /> {/* Add route */}
               </Routes>
             </div>
           </div>
