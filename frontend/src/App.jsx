@@ -132,7 +132,7 @@ function App() {
                 <Route path="/doctor" element={<Doctor />} />
                 <Route path="/reports" element={<DiagnosticResults />} />
                 <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/account-settings" element={<AccountSettings />} /> {/* Add this route */}
+                <Route path="/settings/account" element={<AccountSettings />} />
               </Routes>
             </div>
           </div>
@@ -145,3 +145,5 @@ function App() {
 }
 
 export default App;
+
+
