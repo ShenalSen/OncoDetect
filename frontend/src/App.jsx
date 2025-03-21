@@ -11,6 +11,7 @@ import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
 import AccountSettings from "./Pages/AccountSettings";  
 import NotificationPreferences from "./Pages/NotificationPreferences"; 
+import PrivacyPermissions from "./Pages/PrivacyPermissions";  // Ensure correct import
 
 function DashBoard() {
   return (
@@ -55,16 +56,17 @@ function App() {
                 <Route path="/doctor" element={<Doctor />} />
                 <Route path="/reports" element={<DiagnosticResults />} />
 
-                {/* Nested Routes for Settings */}
+                {/* Settings Page with Nested Routes */}
                 <Route path="/settings" element={<SettingsPage />}>
                   <Route path="account" element={<AccountSettings />} />
-                  <Route path="notifications" element={<NotificationPreferences />} /> 
-                  
-                  {/* Add other settings pages here */}
+                  <Route path="notifications" element={<NotificationPreferences />} />
+                  <Route path="privacy" element={<PrivacyPermissions />} />
                 </Route>
+
+                {/* Direct Routes (if needed separately) */}
                 <Route path="/account-settings" element={<AccountSettings />} />
-                <Route path="/notification-preferences" element={<NotificationPreferences />} /> 
-                
+                <Route path="/notification-preferences" element={<NotificationPreferences />} />
+                <Route path="/privacy-permissions" element={<PrivacyPermissions />} />
               </Routes>
             </div>
           </div>
