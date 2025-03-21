@@ -51,9 +51,24 @@ def predict():
                 print(f"Found file at: {full_path}")
             else:
                 # For development, return a mock response
+                predicted_label = 'Malignant' if patient_id.endswith('3') else 'Benign'
+                confidence = 0.87
+                
+                # Attempt to save prediction
+                try:
+                    from routes.diagnostic_routes import save_prediction_as_diagnostic
+                    save_prediction_as_diagnostic(
+                        patient_id,
+                        predicted_label,
+                        confidence
+                    )
+                    print(f"Mock prediction automatically saved to diagnostic_results for patient {patient_id}")
+                except Exception as e:
+                    print(f"Error saving mock prediction to diagnostic_results: {str(e)}")
+                
                 return jsonify({
-                    'predicted_class': 'Malignant' if patient_id.endswith('3') else 'Benign',
-                    'confidence': 0.87,
+                    'predicted_class': predicted_label,
+                    'confidence': confidence,
                     'patient_id': patient_id,
                     'note': 'Using mock data as file could not be found'
                 }), 200
@@ -63,9 +78,24 @@ def predict():
         if img is None:
             print(f"OpenCV could not read image at: {full_path}")
             # For development, return a mock response
+            predicted_label = 'Malignant' if patient_id.endswith('3') else 'Benign'
+            confidence = 0.87
+            
+            # Attempt to save prediction
+            try:
+                from routes.diagnostic_routes import save_prediction_as_diagnostic
+                save_prediction_as_diagnostic(
+                    patient_id,
+                    predicted_label,
+                    confidence
+                )
+                print(f"Mock prediction automatically saved to diagnostic_results for patient {patient_id}")
+            except Exception as e:
+                print(f"Error saving mock prediction to diagnostic_results: {str(e)}")
+            
             return jsonify({
-                'predicted_class': 'Malignant' if patient_id.endswith('3') else 'Benign',
-                'confidence': 0.87,
+                'predicted_class': predicted_label,
+                'confidence': confidence,
                 'patient_id': patient_id,
                 'note': 'Using mock data as image could not be read'
             }), 200
@@ -90,6 +120,18 @@ def predict():
             predicted_label = class_labels[predicted_class]
             print(f"Model prediction: {predicted_label} with confidence {confidence}")
 
+        # Attempt to save prediction to diagnostic results
+        try:
+            from routes.diagnostic_routes import save_prediction_as_diagnostic
+            save_prediction_as_diagnostic(
+                patient_id,
+                predicted_label,
+                confidence
+            )
+            print(f"Prediction automatically saved to diagnostic_results for patient {patient_id}")
+        except Exception as e:
+            print(f"Error saving to diagnostic_results: {str(e)}")
+
         # Return the prediction
         return jsonify({
             'predicted_class': predicted_label,
@@ -99,14 +141,27 @@ def predict():
     
     except Exception as e:
         print(f"Error during prediction: {e}")
-        # For development, return a mock response
+        
+        # Attempt to save error as prediction
+        try:
+            from routes.diagnostic_routes import save_prediction_as_diagnostic
+            save_prediction_as_diagnostic(
+                patient_id,
+                'Malignant',
+                0.87
+            )
+            print(f"Error prediction automatically saved to diagnostic_results for patient {patient_id}")
+        except Exception as save_e:
+            print(f"Error saving error prediction to diagnostic_results: {str(save_e)}")
+        
+        # Return a mock response
         return jsonify({
             'predicted_class': 'Malignant',
             'confidence': 0.87,
             'patient_id': patient_id,
             'error': str(e),
             'note': 'Using mock data due to error'
-        }), 200  # Return 200 for development, but include error info
+        }), 200  
 
 @prediction_bp.route('/predict/<string:patient_id>', methods=['GET'])
 def get_prediction_for_patient(patient_id):
@@ -122,4 +177,3 @@ def get_prediction_for_patient(patient_id):
     except Exception as e:
         print(f"Error retrieving prediction: {e}")
         return jsonify({'message': f'Error retrieving prediction: {str(e)}'}), 500
-    

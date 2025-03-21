@@ -17,6 +17,14 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_cred
 # Configure the app
 configure_app(app)
 
+# Test MongoDB connection
+try:
+    info = app.db.command('serverStatus')
+    print(f"MongoDB connection successful! Server version: {info.get('version', 'unknown')}")
+except Exception as e:
+    print(f"ERROR: Could not connect to MongoDB: {str(e)}")
+    print("Please make sure MongoDB is running and accessible")
+
 # Register blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(patient_bp)

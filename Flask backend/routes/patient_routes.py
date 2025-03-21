@@ -6,38 +6,62 @@ patient_bp = Blueprint('patient', __name__)
 
 @patient_bp.route('/patient', methods=['POST'])
 def add_patient():
-    data = request.form
-    patient_id = data.get('patient_id')
-    name = data.get('name')
-    age = data.get('age')
-    contact_number = data.get('contact_number')
-    appointment_id = data.get('appointment_id')
+    print("\n----- Starting patient data insertion -----")
+    try:
+        data = request.form
+        patient_id = data.get('patient_id')
+        name = data.get('name')
+        age = data.get('age')
+        contact_number = data.get('contact_number')
+        appointment_id = data.get('appointment_id')
 
-    if 'scan_file' not in request.files:
-        return jsonify({'message': 'No file part in the request'}), 400
+        print(f"Patient data: ID={patient_id}, Name={name}, Age={age}")
+
+        if 'scan_file' not in request.files:
+            print("Error: No scan_file in request")
+            return jsonify({'message': 'No file part in the request'}), 400
+        
+        file = request.files['scan_file']
+        if file.filename == '':
+            print("Error: Empty filename")
+            return jsonify({'message': 'No file selected'}), 400
+        
+        print(f"File received: {file.filename}")
+        file_path = save_file(file)
+        if not file_path:
+            print("Error: Invalid file type")
+            return jsonify({'message': 'Invalid file type'}), 400
+
+        print(f"File saved as: {file_path}")
+
+        patient = {
+            'patient_id': patient_id,
+            'name': name,
+            'age': age,
+            'contact_number': contact_number,
+            'appointment_id': appointment_id,
+            'scan_file': file_path
+        }
+        
+        print(f"Patient document to insert: {patient}")
+        
+        try:
+            print("Getting patients collection...")
+            patients = get_patients_collection()
+            
+            print("Attempting to insert document...")
+            result = patients.insert_one(patient)
+            
+            print(f"Insert result: {result.inserted_id}")
+            return jsonify({'message': 'Patient added successfully', 'patient_id': patient_id}), 201
+        except Exception as db_error:
+            print(f"Database error during insert: {str(db_error)}")
+            return jsonify({'message': f'Database error: {str(db_error)}'}), 500
+    except Exception as e:
+        print(f"Exception in add_patient: {str(e)}")
+        return jsonify({'message': f'Error processing request: {str(e)}'}), 500
     
-    file = request.files['scan_file']
-    if file.filename == '':
-        return jsonify({'message': 'No file selected'}), 400
     
-    file_path = save_file(file)
-    if not file_path:
-        return jsonify({'message': 'Invalid file type'}), 400
-
-    patient = {
-        'patient_id': patient_id,
-        'name': name,
-        'age': age,
-        'contact_number': contact_number,
-        'appointment_id': appointment_id,
-        'scan_file': file_path
-    }
-    
-    patients = get_patients_collection()
-    patients.insert_one(patient)
-
-    return jsonify({'message': 'Patient added successfully'}), 201
-
 @patient_bp.route('/patients', methods=['GET'])
 def get_patients():
     patients_collection = get_patients_collection()
