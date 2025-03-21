@@ -1,13 +1,9 @@
 #root {
-<<<<<<< HEAD
-  max-width: 100%; /* Change from 1280px to 100% */
-  margin: 0;       /* Remove auto margins */
-  padding: 0;      /* Remove padding */
-  text-align: left; /* Optional: change text alignment if needed */
-}
-=======
   /* If you want less global padding, reduce or remove this. */
+  max-width: 100%;
+  margin: 0;
   padding: 0;
+  text-align: left;
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
@@ -83,4 +79,3 @@
 .text-center {
   text-align: center;
 }
->>>>>>> c5695bf41ca23c36861f54371ddd6bcf3859b066
