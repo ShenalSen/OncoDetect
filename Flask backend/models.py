@@ -24,3 +24,4 @@ def get_diagnostic_results_collection():
 
 def get_patient_data_collection():
     return get_db().patient_data
+

@@ -1,4 +1,5 @@
 import os
+import uuid
 from werkzeug.utils import secure_filename
 from config import Config
 from fpdf import FPDF
@@ -15,14 +16,46 @@ def allowed_file(filename, allowed_extensions=None):
 def save_file(file):
     """
     Save an uploaded file to the configured upload folder
-    Returns the file path
+    Returns ONLY the filename (not the path)
     """
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(Config.UPLOAD_FOLDER, filename)
+        # Generate a unique filename to avoid collisions
+        original_filename = secure_filename(file.filename)
+        # Get extension
+        ext = original_filename.rsplit('.', 1)[1].lower() if '.' in original_filename else ''
+        # Create a unique filename with the original extension
+        unique_filename = f"{uuid.uuid4().hex}.{ext}"
+        
+        # Use UPLOAD_FOLDER from Config directly or from current_app
+        upload_folder = getattr(current_app, 'config', {}).get('UPLOAD_FOLDER', Config.UPLOAD_FOLDER)
+        
+        # Ensure the upload folder exists
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)
+        
+        # Full path for saving
+        file_path = os.path.join(upload_folder, unique_filename)
+        
+        # Save the file
         file.save(file_path)
-        return file_path
+        
+        # Log for debugging
+        print(f"File saved at: {file_path}")
+        
+        # Return ONLY the filename, not the path
+        return unique_filename
     return None
+
+def get_file_path(filename):
+    """
+    Get the full path for a file in the upload folder
+    """
+    if not filename:
+        return None
+    
+    # Use UPLOAD_FOLDER from Config directly or from current_app
+    upload_folder = getattr(current_app, 'config', {}).get('UPLOAD_FOLDER', Config.UPLOAD_FOLDER)
+    return os.path.join(upload_folder, filename)
 
 def generate_pdf_report(patient_name, patient_id, diagnosis, notes):
     """

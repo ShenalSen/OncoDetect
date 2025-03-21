@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from config import configure_app
 from routes.auth_routes import auth_bp
@@ -32,6 +32,10 @@ app.register_blueprint(prediction_bp)
 def home():
     from flask import jsonify
     return jsonify({'message': 'Welcome to Oncodetect backend!'}), 200
+
+@app.route('/uploads/<path:filename>')
+def serve_upload(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 # Ensure the upload directory exists
 if not os.path.exists(app.config['UPLOAD_FOLDER']):

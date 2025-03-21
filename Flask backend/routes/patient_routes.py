@@ -74,3 +74,14 @@ def delete_patient(patient_id):
         return jsonify({'message': 'Patient deleted successfully'}), 200
     else:
         return jsonify({'message': 'Patient not found'}), 404
+    
+@patient_bp.route('/patients/recent', methods=['GET'])
+def get_recent_patient():
+    """Get the most recently added patient"""
+    patients = get_patients_collection()
+    # Sort by registration date in descending order and get the first one
+    patient = patients.find_one({}, {'_id': 0}, sort=[('registration_date', -1)])
+    if patient:
+        return jsonify(patient), 200
+    else:
+        return jsonify({'message': 'No patients found'}), 404
