@@ -18,7 +18,7 @@ const Settings = () => {
     { name: "Privacy and Permissions", icon: privacy, route: "/privacy-permissions" },
     { name: "Application Settings", icon: applicationSettings, route: "/application-settings" },
     { name: "Contact Support", icon: contact, route: "/contact-support" },
-    { name: "Feedback and Suggestions", icon: feedback, route: "/feedback-suggestions" },
+    { name: "Feedback and Suggestions", icon: feedback, route: "/feedback" },
     { name: "About us", icon: about, route: "/about-us" },
     { name: "Help and FAQ", icon: help, route: "/help-faq" },
   ];
