@@ -1,7 +1,7 @@
 import React from 'react';
 
+// If this component is being declared in the same file, make sure it's unique and not repeated
 const PredictionTable = () => {
-  // Dummy data array
   const predictions = [
     { name: "Ashini Ishara", dateIn: "Dec 01, 2024", finalResult: "Confirmed", predictionStatus: "Critical" },
     { name: "Shehani Perera", dateIn: "Dec 03, 2024", finalResult: "Confirmed", predictionStatus: "Critical" },
@@ -41,4 +41,5 @@ const PredictionTable = () => {
   );
 }
 
-export default PastPredictions;
+export default PredictionTable;
+
