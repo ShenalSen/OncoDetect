@@ -1,24 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
 import doctorImage from '../assets/doctor.jpg';
-
-const Doctor = () => {
-  return (
-    <div className="w-full">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Doctor</h1>
-      <div className="bg-white shadow-md rounded-lg p-6 w-full">
-        <div className="flex flex-col md:flex-row items-center">
-          <img src={doctorImage} alt="Ashan Perera" className="rounded-full h-32 w-32 md:mr-8" />
-          <div>
-            <h2 className="text-xl font-bold">Ashan Perera</h2>
-            <p>Consultant Clinical Oncologist</p>
-            <p>Medical License Number: SLMC 769873458T</p>
-            <p>Phone Number: +9476 741 9000</p>
-            <p>Email Address: ashanp@nw.dr.lk</p>
-            <p>Associated Hospital/Clinic: Nawaloka Hospitals PLC</p>
-            <p>Years of Experience: 15 years</p>
-=======
-import doctorImage from '../assets/doctor.jpeg';
 
 const Doctor = () => {
   return (
@@ -26,15 +7,7 @@ const Doctor = () => {
       {/* Outer wrapper with left margin for sidebar and a set width */}
       <div className="max-w-4xl ml-64 w-full">
         
-        {/* Top Bar (Dashboard + Search) */}
-        <div className="bg-white p-4 shadow-md rounded-lg mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">Dashboard</h2>
-          <input
-            type="text"
-            placeholder="Search Past Predictions"
-            className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+        
 
         {/* Main Doctor Profile Container */}
         <div className="bg-white border border-gray-300 shadow-md rounded-lg p-8">
@@ -108,7 +81,6 @@ const Doctor = () => {
                 <p className="text-gray-600">Accuracy Rate</p>
               </div>
             </div>
->>>>>>> c5695bf41ca23c36861f54371ddd6bcf3859b066
           </div>
         </div>
         {/* End of main Doctor Profile container */}
