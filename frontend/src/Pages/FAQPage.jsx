@@ -2,9 +2,18 @@ import React, { useState } from "react";
 
 const FAQPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [userQuestion, setUserQuestion] = useState("");
 
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const handleQuestionSubmit = (e) => {
+    e.preventDefault();
+    if (userQuestion.trim()) {
+      alert(`Your question has been submitted: "${userQuestion}"`);
+      setUserQuestion("");
+    }
   };
 
   const faqs = [
@@ -61,6 +70,30 @@ const FAQPage = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-8">
+          <h3 className="text-2xl font-semibold text-indigo-800 mb-4">
+            Have another question?
+          </h3>
+          <form
+            onSubmit={handleQuestionSubmit}
+            className="flex flex-col space-y-4"
+          >
+            <input
+              type="text"
+              value={userQuestion}
+              onChange={(e) => setUserQuestion(e.target.value)}
+              placeholder="Type your question here..."
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              type="submit"
+              className="self-end bg-indigo-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-indigo-700 transition-all"
+            >
+              Submit
+            </button>
+          </form>
         </div>
       </div>
     </div>
