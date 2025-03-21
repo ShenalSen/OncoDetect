@@ -4,10 +4,26 @@ const AccountSettings = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Simple validation
+    if (!username || !email) {
+      setMessage("Username and email are required");
+      return;
+    }
+    
+    if (password && password !== confirmPassword) {
+      setMessage("Passwords don't match");
+      return;
+    }
+    
+    // Success case
     console.log("Account settings updated:", { username, email, password });
+    setMessage("Account settings updated successfully!");
   };
 
   return (
@@ -24,7 +40,7 @@ const AccountSettings = () => {
             placeholder="Enter your username"
           />
         </div>
-
+        
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
           <input
@@ -35,8 +51,25 @@ const AccountSettings = () => {
             placeholder="Enter your email"
           />
         </div>
+        
+        <div className="mb-4">
+          <label className="block text-gray-700">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Enter your password"
+          />
+        </div>
 
         <div className="mb-4">
+        <button
+          type="submit"
+          className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          Save Changes
+        </button>
           <label className="block text-gray-700">Password</label>
           <input
             type="password"
@@ -59,3 +92,5 @@ const AccountSettings = () => {
 };
 
 export default AccountSettings;
+
+
