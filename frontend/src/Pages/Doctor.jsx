@@ -5,7 +5,7 @@ const Doctor = () => {
   return (
     <div className="bg-gray-100 min-h-screen p-8 w-full">
       {/* Outer wrapper with left margin for sidebar and a set width */}
-      <div className="max-w-4xl ml-64 w-full">
+      <div className="max-w-4xl ml-32 w-full">
         
         
 
