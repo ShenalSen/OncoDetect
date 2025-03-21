@@ -41,4 +41,4 @@ const PredictionTable = () => {
   );
 }
 
-export default PastPredictions;
+export default PredictionTable;
