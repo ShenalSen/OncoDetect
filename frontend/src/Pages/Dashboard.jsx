@@ -30,39 +30,6 @@ export const PatientDetails = () => {
     setSelectedFile(file); // Store the selected file in state
   };
 
-  // // Handle form submission
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(); // Create FormData object
-
-  //   // Append form fields to FormData
-  //   formData.append("patient_id", patientData.patientID);
-  //   formData.append("name", patientData.patientName);
-  //   formData.append("age", patientData.patientAge);
-  //   formData.append("contact_number", patientData.contactNumber);
-  //   formData.append("appointment_id", patientData.appointmentID);
-
-  //   // Append the selected file
-  //   if (selectedFile) {
-  //     formData.append("scan_file", selectedFile);
-  //   } else {
-  //     console.log("No file selected.");
-  //   }
-
-  //   // Send data to backend using Axios
-  //   try {
-  //     const response = await axios.post("http://localhost:5000/patient", formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-  //     setMessage("Patient added successfully!");  // Set success message
-  //   } catch (error) {
-  //     setMessage("Error adding patient.");  // Set error message
-  //   }
-  // };
-
-  // Handle form submission
 const handleSubmit = async (e) => {
   e.preventDefault();
   const formData = new FormData();
