@@ -5,7 +5,6 @@ import accountSetting from "../assets/settings.png";
 import notification from "../assets/notification.png";
 import privacy from "../assets/privacy-policy.png";
 import applicationSettings from "../assets/option.png";
-import appearance from "../assets/appearance.png";
 import contact from "../assets/customer-service.png";
 import feedback from "../assets/feedback.png";
 import about from "../assets/support.png";
@@ -17,8 +16,7 @@ const Settings = () => {
     { name: "Account Settings", icon: accountSetting, route: "/account-settings" },
     { name: "Notification Preferences", icon: notification, route: "/notification-preferences" },
     { name: "Privacy and Permissions", icon: privacy, route: "/privacy-permissions" },
-    { name: "Application Settings and Controls", icon: applicationSettings, route: "/application-settings" },
-    { name: "Appearance and Accessibility", icon: appearance, route: "/appearance-accessibility" },
+    { name: "Application Settings", icon: applicationSettings, route: "/application-settings" },
     { name: "Contact Support", icon: contact, route: "/contact-support" },
     { name: "Feedback and Suggestions", icon: feedback, route: "/feedback-suggestions" },
     { name: "About us", icon: about, route: "/about-us" },
