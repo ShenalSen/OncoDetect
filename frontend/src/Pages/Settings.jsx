@@ -19,8 +19,8 @@ const Settings = () => {
     { name: "Application Settings", icon: applicationSettings, route: "/application-settings" },
     { name: "Contact Support", icon: contact, route: "/contact-support" },
     { name: "Feedback and Suggestions", icon: feedback, route: "/feedback" },
-    { name: "About us", icon: about, route: "/about-us" },
-    { name: "Help and FAQ", icon: help, route: "/help-faq" },
+    { name: "About us", icon: about, route: "/about-us" }, // Ensure correct route
+    { name: "Help and FAQ", icon: help, route: "/help-faq" }, // Ensure correct route to FAQPage
   ];
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-6 min-h-screen bg-gray-100 dark:bg-gray-900">
