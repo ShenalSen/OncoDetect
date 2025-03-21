@@ -10,6 +10,7 @@ import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
 import AccountSettings from "./Pages/AccountSettings";  
+import NotificationPreferences from "./Pages/NotificationPreferences"; 
 
 function DashBoard() {
   return (
@@ -57,9 +58,13 @@ function App() {
                 {/* Nested Routes for Settings */}
                 <Route path="/settings" element={<SettingsPage />}>
                   <Route path="account" element={<AccountSettings />} />
+                  <Route path="notifications" element={<NotificationPreferences />} /> 
+                  
                   {/* Add other settings pages here */}
                 </Route>
                 <Route path="/account-settings" element={<AccountSettings />} />
+                <Route path="/notification-preferences" element={<NotificationPreferences />} /> 
+                
               </Routes>
             </div>
           </div>
