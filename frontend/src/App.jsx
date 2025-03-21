@@ -1,22 +1,15 @@
-<<<<<<< HEAD
 import LoginPage from "./Pages/Login";
-=======
-<<<<<<< HEAD
-import LoginPage from "./Pages/Login";
-=======
-import React from "react";
->>>>>>> aa1d765ae0497763b81524233f8a6792fea4e45c
->>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PastPredictions from "./Pages/PredictionTable";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
 import PatientsData from "./Pages/PatientsData";
 import SettingsPage from "./Pages/Settings";
-import DiagnosticResults from "./Pages/DiagosticResults";
 import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
 import React, { useState } from "react";
+import DiagnosticResults from "./Pages/DiagnosticResults";
+
 
 function DashBoard() {
   return (
@@ -57,10 +50,6 @@ function App() {
             {/* Fixed Header */}
             <Header01 />
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
             {/* Main Content (Pushed down to avoid overlap) */}
             <div className="p-6 pt-10">
               <Routes>
@@ -71,20 +60,6 @@ function App() {
                 <Route path="/settings" element={<SettingsPage />} />
               </Routes>
             </div>
-<<<<<<< HEAD
-=======
-=======
-          {/* Main Content (Pushed down to avoid overlap) */}
-          <div className="p-6 pt-10">
-            <Routes>
-              <Route path="/" element={<DashBoard />} />
-              <Route path="/past-predictions" element={<PastPredictions />} />
-              <Route path="/doctor" element={<Doctor />} />
-              <Route path="/reports" element={<DiagnosticResults />} />
-              <Route path="/settings" element={<SettingsPage />} />
-            </Routes>
->>>>>>> aa1d765ae0497763b81524233f8a6792fea4e45c
->>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
           </div>
         </div>
       ) : (
