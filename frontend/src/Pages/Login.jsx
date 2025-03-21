@@ -8,7 +8,6 @@ const LoginPage = ({ setIsAuthenticated }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState(''); // For registration
   const [confirmPassword, setConfirmPassword] = useState(''); // For registration
-  const [phone, setPhone] = useState(''); // New state for phone number
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -27,17 +26,13 @@ const LoginPage = ({ setIsAuthenticated }) => {
         alert("Passwords do not match!");
         return;
       }
-      if (!phone.match(/^\d{10}$/)) {
-        alert("Please enter a valid 10-digit phone number.");
-        return;
-      }
       alert("Registration successful! Please log in.");
       setIsLogin(true); // Switch to login after registration
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-white">
+    <div className="flex items-center justify-center min-h-screen bg-white py-10">
       <div className="bg-white p-10 rounded-2xl shadow-xl w-96 text-center border-4 border-purple-500">
         <div className="flex justify-center mb-6">
           <img src={img11} alt="OncoDetect Logo" className="h-20" />
@@ -54,21 +49,9 @@ const LoginPage = ({ setIsAuthenticated }) => {
               <input
                 type="text"
                 placeholder="Enter your name"
-                className="w-full p-3 border-2 border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-          )}
-          {!isLogin && (
-            <div>
-              <input
-                type="text"
-                placeholder="Enter your phone number"
-                className="w-full p-3 border-2 border-green-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
                 required
               />
             </div>
@@ -77,7 +60,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
             <input
               type="email"
               placeholder="Enter email here"
-              className="w-full p-3 border-2 border-yellow-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -87,7 +70,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
             <input
               type="password"
               placeholder="Enter password here"
-              className="w-full p-3 border-2 border-red-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -98,7 +81,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
               <input
                 type="password"
                 placeholder="Confirm password"
-                className="w-full p-3 border-2 border-indigo-400 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
