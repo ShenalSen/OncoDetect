@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+<<<<<<< HEAD
 import LoginPage from "./Pages/Login";
+=======
+import LoginPage from "./Pages/LoginPage";
+>>>>>>> c34d418 (Implement logout route to handle user sign-out)
 import PastPredictions from "./Pages/PredictionTable";
+import Logout from "./Pages/Logout";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
 import PatientsData from "./Pages/PatientsData";
 import SettingsPage from "./Pages/Settings";
@@ -41,6 +46,7 @@ function App() {
 
   return (
     <Router>
+<<<<<<< HEAD
       {isAuthenticated ? (
         <div className="flex">
           {/* Sidebar */}
@@ -79,6 +85,38 @@ function App() {
                 <Route path="/help-faq" element={<FAQPage />} /> {/* Add route for FAQPage */}
               </Routes>
             </div>
+=======
+      {/* Sidebar & Header Wrapper */}
+      <div className="flex">
+        {/* Sidebar */}
+        {isAuthenticated && (
+          <div className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg">
+            <Nav />
+          </div>
+        )}
+
+        {/* Main Content Wrapper */}
+        <div className={isAuthenticated ? "flex-1 ml-64 bg-gray-100 min-h-screen" : "w-full"}>
+          {/* Fixed Header */}
+          {isAuthenticated && <Header01 />}
+
+          {/* Main Content (Pushed down to avoid overlap) */}
+          <div className="p-6 pt-10">
+            <Routes>
+              {!isAuthenticated ? (
+                <Route path="*" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
+              ) : (
+                <>
+                  <Route path="/" element={<DashBoard />} />
+                  <Route path="/past-predictions" element={<PastPredictions />} />
+                  <Route path="/doctor" element={<Doctor />} />
+                  <Route path="/reports" element={<DiagnosticResults />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/logout" element={<Logout setIsAuthenticated={setIsAuthenticated} />} />
+                </>
+              )}
+            </Routes>
+>>>>>>> c34d418 (Implement logout route to handle user sign-out)
           </div>
         </div>
       ) : (
