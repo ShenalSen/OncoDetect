@@ -22,7 +22,7 @@ const ApplicationSettings = () => {
   return (
     <div className="max-w-lg mx-auto bg-white shadow-xl rounded-2xl p-6 mt-12 transition-all duration-300">
       {/* Title */}
-      <h2 className="text-4xl font-extrabold text-gray-800 text-center mb-8">⚙️ Application Settings</h2>
+      <h2 className="text-xl font-extrabold text-gray-800 text-center mb-8"> Application Settings</h2>
       
       <div className="space-y-4">
         {/* Dark Mode Toggle */}
@@ -56,9 +56,9 @@ const ApplicationSettings = () => {
       {/* Save Button */}
       <button
         onClick={handleSave}
-        className="mt-8 w-full bg-blue-600 text-white font-semibold text-lg p-4 rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg"
+        className="mt-8 w-full bg-blue-600 text-white font-semibold text-lg p-2 rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg"
       >
-        💾 Save Settings
+         Save Settings
       </button>
     </div>
   );

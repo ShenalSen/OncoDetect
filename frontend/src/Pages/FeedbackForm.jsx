@@ -110,7 +110,7 @@ const FeedbackForm = () => {
           }`}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Submitting..." : "📩 Submit Feedback"}
+          {isSubmitting ? "Submitting..." : " Submit Feedback"}
         </button>
       </form>
     </div>

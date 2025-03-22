@@ -1,32 +1,35 @@
-import React, { useState } from "react";
+import LoginPage from "./Pages/Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./Pages/Login";
 import PastPredictions from "./Pages/PredictionTable";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
 import PatientsData from "./Pages/PatientsData";
 import SettingsPage from "./Pages/Settings";
-import DiagnosticResults from "./Pages/DiagosticResults";
+import DiagnosticResults from "./Pages/DiagnosticResults"; // Corrected spelling
 import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
-import AccountSettings from "./Pages/AccountSettings";  
-import NotificationPreferences from "./Pages/NotificationPreferences"; 
-import PrivacyPermissions from "./Pages/PrivacyPermissions";  // Ensure correct import
-import ApplicationSettings from "./Pages/ApplicationSettings"; // Import the new page
-import ContactSupport from "./Pages/ContactSupport"; // Import ContactSupport
-import FeedbackForm from "./Pages/FeedbackForm"; // Import FeedbackForm
-import AboutUs from "./Pages/AboutUs"; // Import AboutUs component
-import FAQPage from "./Pages/FAQPage"; // Import FAQPage
+import DiagnosticResults from "./Pages/DiagnosticResults";
+import AccountSettings from "./Pages/AccountSettings";
+import NotificationPreferences from "./Pages/NotificationPreferences";
+import PrivacyPermissions from "./Pages/PrivacyPermissions";
+import ApplicationSettings from "./Pages/ApplicationSettings";
+import ContactSupport from "./Pages/ContactSupport";
+import FeedbackForm from "./Pages/FeedbackForm";
+import AboutUs from "./Pages/AboutUs";
+import FAQPage from "./Pages/FAQPage";
+import React, { useState, useEffect } from "react";
+
 
 function DashBoard() {
   return (
     <div className="w-full">
-      <div className="flex flex-col lg:flex-row gap-6 p-4 pt-20 w-full">
+      <div className="flex flex-col lg:flex-row gap-6 p-4 pt-12 w-full">
         <div className="flex-1">
           <PatientDetails />
           <PatientsData />
         </div>
-        <div className="w-full lg:w-1/3 space-y-6">
+        <div className="w-full lg:w-1/3 space-y-3">
           <DoctorProf />
           <Appointment />
           <Notification />
@@ -38,6 +41,14 @@ function DashBoard() {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check for existing token on app load
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
     <Router>
@@ -53,13 +64,16 @@ function App() {
             {/* Fixed Header */}
             <Header01 />
 
-            {/* Main Content */}
+            {/* Main Content (Pushed down to avoid overlap) */}
             <div className="p-6 pt-10">
               <Routes>
                 <Route path="/" element={<DashBoard />} />
                 <Route path="/past-predictions" element={<PastPredictions />} />
                 <Route path="/doctor" element={<Doctor />} />
                 <Route path="/reports" element={<DiagnosticResults />} />
+                <Route path="/logout" element={<Logout setIsAuthenticated={setIsAuthenticated} />} />
+
+
 
                 {/* Settings Page with Nested Routes */}
                 <Route path="/settings" element={<SettingsPage />}>
@@ -79,6 +93,8 @@ function App() {
                 <Route path="/help-faq" element={<FAQPage />} /> {/* Add route for FAQPage */}
               </Routes>
             </div>
+
+
           </div>
         </div>
       ) : (

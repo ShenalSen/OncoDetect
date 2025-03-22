@@ -40,6 +40,4 @@ const PredictionTable = () => {
     </div>
   );
 }
-
 export default PredictionTable;
-
