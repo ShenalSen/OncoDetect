@@ -1,10 +1,11 @@
 import LoginPage from "./Pages/Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from "./Pages/Login";
 import PastPredictions from "./Pages/PredictionTable";
-import Logout from "./Pages/Logout";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
 import PatientsData from "./Pages/PatientsData";
 import SettingsPage from "./Pages/Settings";
+import DiagnosticResults from "./Pages/DiagnosticResults"; // Corrected spelling
 import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
@@ -51,7 +52,6 @@ function App() {
 
   return (
     <Router>
-
       {isAuthenticated ? (
         <div className="flex">
           {/* Sidebar */}
