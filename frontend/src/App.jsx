@@ -1,11 +1,10 @@
-import LoginPage from "./Pages/Login";
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./Pages/Login";
 import PastPredictions from "./Pages/PredictionTable";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
 import PatientsData from "./Pages/PatientsData";
 import SettingsPage from "./Pages/Settings";
-import DiagnosticResults from "./Pages/DiagnosticResults"; // Corrected spelling
 import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
@@ -19,6 +18,7 @@ import FeedbackForm from "./Pages/FeedbackForm";
 import AboutUs from "./Pages/AboutUs";
 import FAQPage from "./Pages/FAQPage";
 import React, { useState, useEffect } from "react";
+import Logout from "./Pages/Login";
 
 
 function DashBoard() {
