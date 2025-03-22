@@ -18,9 +18,9 @@ const PrivacyPermissions = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 mt-12">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">🔒 Privacy & Permissions</h2>
+    <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-12">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-12">
+        <h2 className="text-xl font-bold text-gray-800 text-center mb-8">Privacy & Permissions</h2>
         
         <div className="space-y-6">
           {[
@@ -52,7 +52,7 @@ const PrivacyPermissions = () => {
           onClick={handleDeleteRequest}
           className="mt-8 w-full bg-red-600 text-white font-semibold p-3 rounded-lg hover:bg-red-700 transition duration-200"
         >
-          ❌ Request Account Deletion
+          Request Account Deletion
         </button>
       </div>
     </div>
