@@ -42,4 +42,7 @@ const PredictionTable = () => {
 }
 
 export default PredictionTable;
+<<<<<<< HEAD
+=======
 
+>>>>>>> c3bcf3ced647b33fd58b19fc2657dcdf11bee818

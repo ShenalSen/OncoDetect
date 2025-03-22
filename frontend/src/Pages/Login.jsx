@@ -12,6 +12,14 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+<<<<<<< HEAD
+    
+    // Simple authentication check (You should replace this with real authentication logic)
+    if (email === "A@gmail.com" && password === "1") {
+      setIsAuthenticated(true); 
+      navigate("/")
+
+=======
     if (isLogin) {
       // Login logic
       if (email === "admin@example.com" && password === "password123") {
@@ -20,6 +28,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
       } else {
         alert("Invalid credentials, please try again.");
       }
+>>>>>>> c3bcf3ced647b33fd58b19fc2657dcdf11bee818
     } else {
       // Registration logic
       if (password !== confirmPassword) {

@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+<<<<<<< HEAD
 import LoginPage from "./Pages/Login";
+=======
+<<<<<<< HEAD
+import LoginPage from "./Pages/Login";
+=======
+import React from "react";
+>>>>>>> aa1d765ae0497763b81524233f8a6792fea4e45c
+>>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PastPredictions from "./Pages/PredictionTable";
+import Logout from "./Pages/Logout";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
 import PatientsData from "./Pages/PatientsData";
 import SettingsPage from "./Pages/Settings";
-import DiagnosticResults from "./Pages/DiagosticResults";
 import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
-import AccountSettings from "./Pages/AccountSettings";  
-import NotificationPreferences from "./Pages/NotificationPreferences"; 
-import PrivacyPermissions from "./Pages/PrivacyPermissions";  // Ensure correct import
-import ApplicationSettings from "./Pages/ApplicationSettings"; // Import the new page
-import ContactSupport from "./Pages/ContactSupport"; // Import ContactSupport
-import FeedbackForm from "./Pages/FeedbackForm"; // Import FeedbackForm
-import AboutUs from "./Pages/AboutUs"; // Import AboutUs component
-import FAQPage from "./Pages/FAQPage"; // Import FAQPage
+import React, { useState } from "react";
 
 function DashBoard() {
   return (
@@ -41,6 +41,7 @@ function App() {
 
   return (
     <Router>
+<<<<<<< HEAD
       {isAuthenticated ? (
         <div className="flex">
           {/* Sidebar */}
@@ -53,7 +54,11 @@ function App() {
             {/* Fixed Header */}
             <Header01 />
 
-            {/* Main Content */}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
+            {/* Main Content (Pushed down to avoid overlap) */}
             <div className="p-6 pt-10">
               <Routes>
                 <Route path="/" element={<DashBoard />} />
@@ -79,6 +84,20 @@ function App() {
                 <Route path="/help-faq" element={<FAQPage />} /> {/* Add route for FAQPage */}
               </Routes>
             </div>
+<<<<<<< HEAD
+=======
+=======
+          {/* Main Content (Pushed down to avoid overlap) */}
+          <div className="p-6 pt-10">
+            <Routes>
+              <Route path="/" element={<DashBoard />} />
+              <Route path="/past-predictions" element={<PastPredictions />} />
+              <Route path="/doctor" element={<Doctor />} />
+              <Route path="/reports" element={<DiagnosticResults />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Routes>
+>>>>>>> aa1d765ae0497763b81524233f8a6792fea4e45c
+>>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
           </div>
         </div>
       ) : (
