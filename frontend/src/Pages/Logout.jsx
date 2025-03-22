@@ -7,7 +7,7 @@ const Logout = ({ setIsAuthenticated }) => {
   const handleLogout = () => {
     // Clear any authentication tokens or user data here
     setIsAuthenticated(false); // Update the authentication state
-    navigate("/"); // Redirect to the login page
+    navigate("/login"); // Redirect to the login page
   };
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
