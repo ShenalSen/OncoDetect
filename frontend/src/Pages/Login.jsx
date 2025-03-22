@@ -8,18 +8,14 @@ const LoginPage = ({ setIsAuthenticated }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState(''); // For registration
   const [confirmPassword, setConfirmPassword] = useState(''); // For registration
+  const [specialization, setSpecialization] = useState(''); // For registration
+  const [medicalLicense, setMedicalLicense] = useState(''); // For registration
+  const [contactDetails, setContactDetails] = useState(''); // For registration
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    
-    // Simple authentication check (You should replace this with real authentication logic)
-    if (email === "A@gmail.com" && password === "1") {
-      setIsAuthenticated(true); 
-      navigate("/")
 
-=======
     if (isLogin) {
       // Login logic
       if (email === "admin@example.com" && password === "password123") {
@@ -28,7 +24,6 @@ const LoginPage = ({ setIsAuthenticated }) => {
       } else {
         alert("Invalid credentials, please try again.");
       }
->>>>>>> c3bcf3ced647b33fd58b19fc2657dcdf11bee818
     } else {
       // Registration logic
       if (password !== confirmPassword) {
@@ -54,16 +49,48 @@ const LoginPage = ({ setIsAuthenticated }) => {
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
-            <div>
-              <input
-                type="text"
-                placeholder="Enter your name"
-                className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
+            <>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Enter your specialization"
+                  className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  value={specialization}
+                  onChange={(e) => setSpecialization(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Enter your medical license number"
+                  className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  value={medicalLicense}
+                  onChange={(e) => setMedicalLicense(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Enter your contact details"
+                  className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  value={contactDetails}
+                  onChange={(e) => setContactDetails(e.target.value)}
+                  required
+                />
+              </div>
+            </>
           )}
           <div>
             <input
