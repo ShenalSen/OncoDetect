@@ -1,35 +1,121 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import img11 from "../assets/OncoDetect.png";
 
-const Logout = ({ setIsAuthenticated }) => {
+const LogoutPage = ({ setIsAuthenticated }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Clear any authentication tokens or user data here
-    setIsAuthenticated(false); // Update the authentication state
-    navigate("/"); // Redirect to the login page
-  };
-  return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="w-[30rem] h-[20rem] bg-white border border-purple-300 p-8 rounded-lg shadow-md flex flex-col justify-center">
-       
-        <h2 className="text-2xl font-bold text-gray-800 text-center leading-snug">
-          Are you sure you want to
-          <br />
-          Logout?
-        </h2>
+  const handleLogout = async () => {
+    setIsLoading(true);
+    setError('');
+    setSuccess('');
 
-        {/* Button Row: left and right with a gap */}
-        <div className="flex justify-center space-x-4 mt-8">
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setError('No active session found');
+        setIsLoading(false);
+        return;
+      }
+
+      // Try to send an empty request body to fix the 422 error
+      const response = await fetch('http://localhost:5000/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({}) // Add empty object as request body
+      });
+
+      if (response.ok) {
+        // Clear token from storage
+        localStorage.removeItem('token');
+        setSuccess('Successfully logged out');
+        
+        // Update authentication state after a brief delay to show success message
+        setTimeout(() => {
+          setIsAuthenticated(false);
+          navigate('/login');
+        }, 1500);
+      } else {
+        // Handle common error cases
+        if (response.status === 422) {
+          console.log("422 Unprocessable Entity - Trying alternative logout approach");
+          // If API still fails, just clear the token and log out on the client side
+          localStorage.removeItem('token');
+          setSuccess('Logged out on client side');
+          setTimeout(() => {
+            setIsAuthenticated(false);
+            navigate('/login');
+          }, 1500);
+        } else {
+          const data = await response.json();
+          setError(data.message || 'Logout failed. Please try again.');
+        }
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      
+      // Even if the API request fails, we can still log out on client side
+      localStorage.removeItem('token');
+      setSuccess('Logged out on client side');
+      
+      setTimeout(() => {
+        setIsAuthenticated(false);
+        navigate('/login');
+      }, 1500);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    navigate('/');
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-10 rounded-2xl shadow-xl w-96 text-center">
+        <div className="flex justify-center mb-6">
+          <img src={img11} alt="OncoDetect Logo" className="h-20" />
+        </div>
+        <h1 className="text-3xl font-bold text-purple-700 mb-6">Onco<span className="text-gray-800">Detect</span></h1>
+        
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+        
+        {success && (
+          <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
+            {success}
+          </div>
+        )}
+        
+        <div className="mb-6">
+          <h2 className="text-xl font-medium text-gray-800 mb-2">Confirm Logout</h2>
+          <p className="text-gray-600">Are you sure you want to log out of your account?</p>
+        </div>
+        
+        <div className="space-y-3">
           <button
             onClick={handleLogout}
-            className="px-5 py-2 rounded-md bg-purple-200 text-purple-800 font-medium hover:bg-purple-300 transition"
+            className={`w-full ${isLoading ? 'bg-purple-400' : 'bg-purple-600 hover:bg-purple-700'} text-white py-3 rounded-md transition`}
+            disabled={isLoading}
           >
-            Yes, I want to Logout
+            {isLoading ? 'Logging out...' : 'Logout'}
           </button>
+          
           <button
-            onClick={() => navigate(-1)}
-            className="px-5 py-2 rounded-md bg-gray-200 text-gray-800 font-medium hover:bg-gray-300 transition"
+            onClick={handleCancel}
+            className="w-full bg-gray-200 text-gray-800 hover:bg-gray-300 py-3 rounded-md transition"
+            disabled={isLoading}
           >
             Cancel
           </button>
@@ -38,4 +124,5 @@ const Logout = ({ setIsAuthenticated }) => {
     </div>
   );
 };
-export default Logout;
+
+export default LogoutPage;
