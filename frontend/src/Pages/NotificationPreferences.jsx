@@ -16,10 +16,10 @@ const NotificationPreferences = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="max-w-lg w-full bg-white shadow-2xl rounded-2xl p-8">
         {/* Title with better spacing */}
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-10">
+        <h2 className="text-xl font-bold text-gray-800 text-center mb-10">
           Notification Preferences
         </h2>
 
@@ -54,9 +54,9 @@ const NotificationPreferences = () => {
         {/* Save Button */}
         <button
           onClick={handleSave}
-          className="mt-10 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition duration-300 shadow-lg"
+          className="mt-10 w-full  bg-blue-500 text-white font-bold py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition duration-300 shadow-lg"
         >
-          💾 Save Preferences
+           Save Preferences
         </button>
       </div>
     </div>
