@@ -1,12 +1,4 @@
-<<<<<<< HEAD
 import LoginPage from "./Pages/Login";
-=======
-<<<<<<< HEAD
-import LoginPage from "./Pages/Login";
-=======
-import React from "react";
->>>>>>> aa1d765ae0497763b81524233f8a6792fea4e45c
->>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PastPredictions from "./Pages/PredictionTable";
 import Logout from "./Pages/Logout";
@@ -16,17 +8,27 @@ import SettingsPage from "./Pages/Settings";
 import Doctor from "./Pages/Doctor";
 import Nav from "./components/Nav";
 import Header01 from "./components/headerMain";
-import React, { useState } from "react";
+import DiagnosticResults from "./Pages/DiagnosticResults";
+import AccountSettings from "./Pages/AccountSettings";
+import NotificationPreferences from "./Pages/NotificationPreferences";
+import PrivacyPermissions from "./Pages/PrivacyPermissions";
+import ApplicationSettings from "./Pages/ApplicationSettings";
+import ContactSupport from "./Pages/ContactSupport";
+import FeedbackForm from "./Pages/FeedbackForm";
+import AboutUs from "./Pages/AboutUs";
+import FAQPage from "./Pages/FAQPage";
+import React, { useState, useEffect } from "react";
+
 
 function DashBoard() {
   return (
     <div className="w-full">
-      <div className="flex flex-col lg:flex-row gap-6 p-4 pt-20 w-full">
+      <div className="flex flex-col lg:flex-row gap-6 p-4 pt-12 w-full">
         <div className="flex-1">
           <PatientDetails />
           <PatientsData />
         </div>
-        <div className="w-full lg:w-1/3 space-y-6">
+        <div className="w-full lg:w-1/3 space-y-3">
           <DoctorProf />
           <Appointment />
           <Notification />
@@ -39,9 +41,17 @@ function DashBoard() {
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Check for existing token on app load
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   return (
     <Router>
-<<<<<<< HEAD
+
       {isAuthenticated ? (
         <div className="flex">
           {/* Sidebar */}
@@ -54,10 +64,6 @@ function App() {
             {/* Fixed Header */}
             <Header01 />
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
             {/* Main Content (Pushed down to avoid overlap) */}
             <div className="p-6 pt-10">
               <Routes>
@@ -65,6 +71,9 @@ function App() {
                 <Route path="/past-predictions" element={<PastPredictions />} />
                 <Route path="/doctor" element={<Doctor />} />
                 <Route path="/reports" element={<DiagnosticResults />} />
+                <Route path="/logout" element={<Logout setIsAuthenticated={setIsAuthenticated} />} />
+
+
 
                 {/* Settings Page with Nested Routes */}
                 <Route path="/settings" element={<SettingsPage />}>
@@ -84,20 +93,8 @@ function App() {
                 <Route path="/help-faq" element={<FAQPage />} /> {/* Add route for FAQPage */}
               </Routes>
             </div>
-<<<<<<< HEAD
-=======
-=======
-          {/* Main Content (Pushed down to avoid overlap) */}
-          <div className="p-6 pt-10">
-            <Routes>
-              <Route path="/" element={<DashBoard />} />
-              <Route path="/past-predictions" element={<PastPredictions />} />
-              <Route path="/doctor" element={<Doctor />} />
-              <Route path="/reports" element={<DiagnosticResults />} />
-              <Route path="/settings" element={<SettingsPage />} />
-            </Routes>
->>>>>>> aa1d765ae0497763b81524233f8a6792fea4e45c
->>>>>>> 8a6c2a8ea2094c0e09a3babe125778a40bc49683
+
+
           </div>
         </div>
       ) : (
