@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models import get_patients_collection
+from models import get_diagnostic_results_collection
 from utils import save_file
 import cv2
 import numpy as np
@@ -167,8 +168,7 @@ def predict():
 def get_prediction_for_patient(patient_id):
     """Get the most recent prediction for a patient"""
     try:
-        # In a real system, you'd look up stored predictions
-        # For this example, we'll return a mock prediction
+      
         return jsonify({
             'predicted_class': 'Malignant' if patient_id.endswith('3') else 'Benign',
             'confidence': 0.87,
@@ -177,3 +177,46 @@ def get_prediction_for_patient(patient_id):
     except Exception as e:
         print(f"Error retrieving prediction: {e}")
         return jsonify({'message': f'Error retrieving prediction: {str(e)}'}), 500
+    
+
+@prediction_bp.route('/past_predictions', methods=['GET'])
+def get_past_predictions():
+    """Get a list of past predictions with patient details"""
+    try:
+        # We'll join data from multiple collections to create a complete picture
+        diagnostic_results = get_diagnostic_results_collection()
+        patients = get_patients_collection()
+        
+        # Get all diagnostic results (which store our predictions)
+        all_results = list(diagnostic_results.find({}, {'_id': 0}))
+        
+        # Prepare the response data
+        past_predictions = []
+        
+        for result in all_results:
+            # Get patient details for each result
+            patient_id = result.get('patient_id')
+            patient = patients.find_one({'patient_id': patient_id}, {'_id': 0})
+            
+            if patient:
+                # Create a prediction entry with patient details
+                prediction_entry = {
+                    'name': patient.get('name', 'Unknown'),
+                    'patient_id': patient_id,
+                    'dateIn': result.get('creation_date', '').split('T')[0] if 'creation_date' in result else 'Unknown',
+                    'finalResult': result.get('status', 'Pending') if result.get('status') else 'Pending',
+                    'predictionStatus': result.get('final_result', 'Unknown'),
+                    'confidence': result.get('abnormal_percentage', 0),
+                    'recommendedAction': result.get('doctor_recommendation', 'Awaiting review')
+                }
+                
+                past_predictions.append(prediction_entry)
+        
+        # Sort by creation date (newest first)
+        past_predictions.sort(key=lambda x: x.get('dateIn', ''), reverse=True)
+        
+        return jsonify(past_predictions), 200
+    
+    except Exception as e:
+        print(f"Error retrieving past predictions: {str(e)}")
+        return jsonify({'message': f'Error retrieving past predictions: {str(e)}'}), 500
