@@ -48,7 +48,7 @@ import React from "react";
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-indigo-700 flex items-center justify-center py-16 px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center py-16 px-4">
       <div className="max-w-3xl mx-auto bg-white shadow-xl p-8 rounded-xl transform transition-all duration-1000 ease-in-out hover:scale-105">
         <h2 className="text-4xl font-bold text-center text-blue-600 mb-6 animate__animated animate__fadeIn animate__delay-1s">
           About Us
