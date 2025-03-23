@@ -1,8 +1,0 @@
-Flask==2.2.3
-Flask-SQLAlchemy==3.0.3
-Flask-Bcrypt==1.0.1
-Flask-JWT-Extended==4.4.4
-Flask-Login==0.6.2
-Flask-Cors==3.0.10
-fpdf==1.7.2
-Werkzeug==2.2.3
