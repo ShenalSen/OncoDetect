@@ -26,7 +26,6 @@ jobs:
     - name: Install dependencies
       run: |
         source activate myenv
-        conda install -y numpy pandas scipy matplotlib pytest flake8
 
     - name: Lint with flake8
       run: |
