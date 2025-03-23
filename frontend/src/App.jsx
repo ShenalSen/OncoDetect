@@ -1,5 +1,5 @@
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./Pages/Login";
 import PastPredictions from "./Pages/PredictionTable";
 import { PatientDetails, Appointment, Notification, DoctorProf } from "./Pages/Dashboard";
@@ -17,9 +17,7 @@ import ContactSupport from "./Pages/ContactSupport";
 import FeedbackForm from "./Pages/FeedbackForm";
 import AboutUs from "./Pages/AboutUs";
 import FAQPage from "./Pages/FAQPage";
-import React, { useState, useEffect } from "react";
-import Logout from "./Pages/Login";
-
+import Logout from "./Pages/Logout";
 
 function DashBoard() {
   return (
@@ -73,8 +71,6 @@ function App() {
                 <Route path="/reports" element={<DiagnosticResults />} />
                 <Route path="/logout" element={<Logout setIsAuthenticated={setIsAuthenticated} />} />
 
-
-
                 {/* Settings Page with Nested Routes */}
                 <Route path="/settings" element={<SettingsPage />}>
                   <Route path="account" element={<AccountSettings />} />
@@ -86,19 +82,25 @@ function App() {
                 <Route path="/account-settings" element={<AccountSettings />} />
                 <Route path="/notification-preferences" element={<NotificationPreferences />} />
                 <Route path="/privacy-permissions" element={<PrivacyPermissions />} />
-                <Route path="/application-settings" element={<ApplicationSettings />} /> {/* Add route */}
-                <Route path="/contact-support" element={<ContactSupport />} /> {/* Add route */}
-                <Route path="/feedback" element={<FeedbackForm />} /> {/* Add route */}
-                <Route path="/about-us" element={<AboutUs />} /> {/* Add route for About Us */}
-                <Route path="/help-faq" element={<FAQPage />} /> {/* Add route for FAQPage */}
+                <Route path="/application-settings" element={<ApplicationSettings />} />
+                <Route path="/contact-support" element={<ContactSupport />} />
+                <Route path="/feedback" element={<FeedbackForm />} />
+                <Route path="/about-us" element={<AboutUs />} />
+                <Route path="/help-faq" element={<FAQPage />} />
+                
+                {/* Redirect any unknown routes to dashboard */}
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>
-
-
           </div>
         </div>
       ) : (
-        <LoginPage setIsAuthenticated={setIsAuthenticated} />
+        <Routes>
+          <Route 
+            path="*" 
+            element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} 
+          />
+        </Routes>
       )}
     </Router>
   );
