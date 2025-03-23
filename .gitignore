@@ -9,6 +9,3 @@
 
 # Ignore csv files
 *.csv
-
-#Ignore .keras files
-*.keras
