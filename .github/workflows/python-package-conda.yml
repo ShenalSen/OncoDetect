@@ -21,19 +21,22 @@ jobs:
     - name: Create Conda environment
       run: |
         conda create --name myenv python=3.10 -y
-        echo "source activate myenv" >> ~/.bashrc  # Ensure the environment can be activated
 
     - name: Install dependencies
       run: |
-        source activate myenv
+        eval "$(conda shell.bash hook)"
+        conda activate myenv
+        conda install -y numpy pandas scipy matplotlib pytest flake8
 
     - name: Lint with flake8
       run: |
-        source activate myenv
+        eval "$(conda shell.bash hook)"
+        conda activate myenv
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Test with pytest
       run: |
-        source activate myenv
+        eval "$(conda shell.bash hook)"
+        conda activate myenv
         pytest
