@@ -9,11 +9,13 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+RUN npm install node-polyfill-webpack-plugin
 
 # Copy the rest of the application code
 COPY . .
 
-# Build the application
+# Build the application with NODE_ENV set to production
+ENV NODE_ENV=production
 RUN npm run build
 
 # Expose the port the app runs on
